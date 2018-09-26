@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="pro.rudloff.hangupsdroid">
   <uses-permission android:name="android.permission.INTERNET"/>
   <application android:name=".App" android:label="HangupsDroid" android:theme="@style/Theme.AppCompat.Light.DarkActionBar" android:allowBackup="false">
-    <activity android:name=".LoginActivity" android:noHistory="true">
+    <activity android:name=".activities.LoginActivity" android:noHistory="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
@@ -14,6 +14,6 @@
         <data android:scheme="https" android:host="hangouts.google.com"/>
       </intent-filter>
     </activity>
-    <activity android:name=".ConversationListActivity"/>
+    <activity android:name=".activities.ConversationListActivity"/>
   </application>
 </manifest>
