@@ -16,7 +16,7 @@ public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
     private WeakReference<Activity> activityReference;
 
     public PythonTask(Activity activity) {
-        activityReference = new WeakReference(activity);
+        activityReference = new WeakReference<Activity>(activity);
     }
 
     protected Boolean doInBackground(PyObject... tasks) {
