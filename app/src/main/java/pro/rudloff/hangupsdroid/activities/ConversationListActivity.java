@@ -2,14 +2,9 @@ package pro.rudloff.hangupsdroid.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import com.chaquo.python.PyObject;
-import com.chaquo.python.Python;
-
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
-import com.stfalcon.chatkit.commons.ImageLoader;
-
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.AvatarLoader;
 import pro.rudloff.hangupsdroid.Conversation;
@@ -47,5 +42,4 @@ public class ConversationListActivity extends AppCompatActivity {
         runOnUiThread(new AddConversationRunnable(conversationAdapter, conversationList));
         app.progressDialog.dismiss();
     }
-
 }

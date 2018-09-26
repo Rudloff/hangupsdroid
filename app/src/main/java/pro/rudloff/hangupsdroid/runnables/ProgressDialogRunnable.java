@@ -2,7 +2,6 @@ package pro.rudloff.hangupsdroid.runnables;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-
 import pro.rudloff.hangupsdroid.App;
 
 public class ProgressDialogRunnable implements Runnable {

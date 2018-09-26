@@ -2,10 +2,8 @@ package pro.rudloff.hangupsdroid;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
-
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IMessage;
-
 import java.util.ArrayList;
 
 public class Conversation implements IDialog {
@@ -18,7 +16,7 @@ public class Conversation implements IDialog {
     }
 
     public String getId() {
-       return conversation.get("id_").toString();
+        return conversation.get("id_").toString();
     }
 
     public String getDialogPhoto() {
@@ -66,7 +64,10 @@ public class Conversation implements IDialog {
         if (lastMessage == null) {
             PyObject message = hangupsdroid.callAttr("getLastMessage", conversation);
             if (message != null) {
-                setLastMessage(new Message(message, conversation.callAttr("get_user", message.get("user_id"))));
+                setLastMessage(
+                        new Message(
+                                message,
+                                conversation.callAttr("get_user", message.get("user_id"))));
             }
         }
 
@@ -74,7 +75,7 @@ public class Conversation implements IDialog {
     }
 
     public void setLastMessage(IMessage message) {
-       lastMessage = message;
+        lastMessage = message;
     }
 
     public int getUnreadCount() {
@@ -83,5 +84,4 @@ public class Conversation implements IDialog {
 
         return hangupsdroid.callAttr("getNumUnread", conversation).toJava(int.class);
     }
-
 }

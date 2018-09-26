@@ -1,9 +1,7 @@
 package pro.rudloff.hangupsdroid.listeners;
 
-import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import pro.rudloff.hangupsdroid.activities.LoginActivity;
 
 public class LoginButtonListener implements OnClickListener {

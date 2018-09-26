@@ -1,11 +1,8 @@
 package pro.rudloff.hangupsdroid;
 
 import android.util.Log;
-
 import com.chaquo.python.PyObject;
-
 import com.stfalcon.chatkit.commons.models.IMessage;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,5 +44,4 @@ class Message implements IMessage {
 
         return createdAt;
     }
-
 }

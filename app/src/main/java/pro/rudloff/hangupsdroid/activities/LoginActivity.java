@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
-
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.CredentialsPrompt;
 import pro.rudloff.hangupsdroid.R;
@@ -41,7 +39,13 @@ public class LoginActivity extends AppCompatActivity {
 
         runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.auth_dialog)));
 
-        new PythonTask(this).execute(app.pythonApp.callAttr("getAuth", this, new CredentialsPrompt(this), new RefreshTokenCache(this)));
+        new PythonTask(this)
+                .execute(
+                        app.pythonApp.callAttr(
+                                "getAuth",
+                                this,
+                                new CredentialsPrompt(this),
+                                new RefreshTokenCache(this)));
     }
 
     public void onConnected() {
@@ -55,5 +59,4 @@ public class LoginActivity extends AppCompatActivity {
         runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.connect_dialog)));
         new PythonTask(this).execute(app.pythonApp.callAttr("connect", this, cookies));
     }
-
 }
