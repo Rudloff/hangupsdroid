@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.EditText;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import pro.rudloff.hangupsdroid.App;
@@ -21,8 +22,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);
 
         Button loginButton = findViewById(R.id.btn_login);
+        EditText passwordText = findViewById(R.id.input_password);
 
-        loginButton.setOnClickListener(new LoginButtonListener(this));
+        LoginButtonListener listener = new LoginButtonListener(this);
+        loginButton.setOnClickListener(listener);
+        passwordText.setOnEditorActionListener(listener);
 
         RefreshTokenCache cache = new RefreshTokenCache(this);
         if (cache.get() != null) {
