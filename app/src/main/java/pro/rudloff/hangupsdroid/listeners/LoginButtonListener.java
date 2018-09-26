@@ -6,9 +6,13 @@ import pro.rudloff.hangupsdroid.activities.LoginActivity;
 
 public class LoginButtonListener implements OnClickListener {
 
-    public void onClick(View view) {
-        LoginActivity activity = (LoginActivity) view.getContext();
+    private LoginActivity activity;
 
+    public LoginButtonListener(LoginActivity newActivity) {
+        activity = newActivity;
+    }
+
+    public void onClick(View view) {
         activity.login();
     }
 }

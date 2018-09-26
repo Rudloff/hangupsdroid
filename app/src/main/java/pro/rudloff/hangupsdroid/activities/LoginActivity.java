@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Button loginButton = findViewById(R.id.btn_login);
 
-        loginButton.setOnClickListener(new LoginButtonListener());
+        loginButton.setOnClickListener(new LoginButtonListener(this));
 
         RefreshTokenCache cache = new RefreshTokenCache(this);
         if (cache.get() != null) {
