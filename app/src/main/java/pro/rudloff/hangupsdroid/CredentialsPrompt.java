@@ -3,7 +3,7 @@ package pro.rudloff.hangupsdroid;
 import android.app.Activity;
 import android.widget.EditText;
 
-class CredentialsPrompt {
+public class CredentialsPrompt {
 
     private Activity activity;
 

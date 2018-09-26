@@ -4,7 +4,7 @@ import com.chaquo.python.PyObject;
 
 import com.stfalcon.chatkit.commons.models.IUser;
 
-public class User implements IUser {
+class User implements IUser {
 
     private PyObject user;
 

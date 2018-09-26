@@ -1,4 +1,4 @@
-package pro.rudloff.hangupsdroid;
+package pro.rudloff.hangupsdroid.tasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -9,6 +9,9 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 
 import java.lang.ref.WeakReference;
+
+import pro.rudloff.hangupsdroid.App;
+import pro.rudloff.hangupsdroid.runnables.ToastRunnable;
 
 public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
 

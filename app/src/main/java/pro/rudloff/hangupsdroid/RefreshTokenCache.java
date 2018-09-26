@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-class RefreshTokenCache {
+public class RefreshTokenCache {
 
     private SharedPreferences preferences;
 

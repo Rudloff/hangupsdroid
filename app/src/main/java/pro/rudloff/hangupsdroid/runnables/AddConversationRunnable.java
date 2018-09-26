@@ -1,4 +1,4 @@
-package pro.rudloff.hangupsdroid;
+package pro.rudloff.hangupsdroid.runnables;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
@@ -6,6 +6,8 @@ import com.chaquo.python.Python;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.util.ArrayList;
+
+import pro.rudloff.hangupsdroid.Conversation;
 
 public class AddConversationRunnable implements Runnable {
 

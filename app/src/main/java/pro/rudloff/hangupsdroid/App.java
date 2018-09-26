@@ -9,8 +9,8 @@ import com.chaquo.python.Python;
 
 public class App extends PyApplication {
 
-    PyObject pythonApp;
-    ProgressDialog progressDialog;
+    public PyObject pythonApp;
+    public ProgressDialog progressDialog;
 
     public void onCreate() {
         super.onCreate();

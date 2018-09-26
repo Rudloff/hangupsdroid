@@ -1,4 +1,4 @@
-package pro.rudloff.hangupsdroid;
+package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,14 @@ import android.widget.Button;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
+
+import pro.rudloff.hangupsdroid.App;
+import pro.rudloff.hangupsdroid.CredentialsPrompt;
+import pro.rudloff.hangupsdroid.R;
+import pro.rudloff.hangupsdroid.RefreshTokenCache;
+import pro.rudloff.hangupsdroid.listeners.LoginButtonListener;
+import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
+import pro.rudloff.hangupsdroid.tasks.PythonTask;
 
 public class LoginActivity extends AppCompatActivity {
 

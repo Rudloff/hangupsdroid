@@ -1,4 +1,4 @@
-package pro.rudloff.hangupsdroid;
+package pro.rudloff.hangupsdroid.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +10,14 @@ import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import com.stfalcon.chatkit.commons.ImageLoader;
 
-import android.util.Log;
+import pro.rudloff.hangupsdroid.App;
+import pro.rudloff.hangupsdroid.AvatarLoader;
+import pro.rudloff.hangupsdroid.Conversation;
+import pro.rudloff.hangupsdroid.MessageDateFormatter;
+import pro.rudloff.hangupsdroid.R;
+import pro.rudloff.hangupsdroid.listeners.ConversationClickListener;
+import pro.rudloff.hangupsdroid.runnables.AddConversationRunnable;
+import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 
 public class ConversationListActivity extends AppCompatActivity {
 

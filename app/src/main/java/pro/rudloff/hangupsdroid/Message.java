@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Message implements IMessage {
+class Message implements IMessage {
 
     private PyObject message;
     private PyObject user;

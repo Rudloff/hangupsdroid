@@ -1,4 +1,4 @@
-package pro.rudloff.hangupsdroid;
+package pro.rudloff.hangupsdroid.runnables;
 
 import android.app.Activity;
 import android.widget.Toast;
