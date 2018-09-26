@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="auth_dialog">Authenticating</string>
+  <string name="connect_dialog">Connecting</string>
+  <string name="conversations_dialog">Retrieving conversations</string>
+  <string name="email_field">E-mail address</string>
+  <string name="password_field">Password</string>
+  <string name="login_btn">Login</string>
+</resources>

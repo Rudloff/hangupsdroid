@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="56dp" android:paddingLeft="24dp" android:paddingRight="24dp">
+  <android.support.design.widget.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+    <EditText android:id="@+id/input_email" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" android:hint="@string/email_field"/>
+  </android.support.design.widget.TextInputLayout>
+  <android.support.design.widget.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+    <EditText android:id="@+id/input_password" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:hint="@string/password_field"/>
+  </android.support.design.widget.TextInputLayout>
+  <android.support.v7.widget.AppCompatButton android:id="@+id/btn_login" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/login_btn"/>
+</LinearLayout>

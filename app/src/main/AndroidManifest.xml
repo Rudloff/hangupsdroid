@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="pro.rudloff.hangupsdroid">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <application android:name=".App" android:label="HangupsDroid" android:theme="@style/Theme.AppCompat.Light.DarkActionBar" android:allowBackup="false" tools:replace="android:label">
+    <activity android:name=".LoginActivity" android:noHistory="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="https" android:host="hangouts.google.com"/>
+      </intent-filter>
+    </activity>
+    <activity android:name=".ConversationListActivity"/>
+  </application>
+</manifest>

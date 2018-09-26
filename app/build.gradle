@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.chaquo.python'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+
+        versionCode 1
+        versionName "1.0"
+
+        python {
+            version '3.6.5'
+
+            pip {
+                install "hangups==0.4.5"
+                install "janus==0.4.0"
+            }
+        }
+
+        ndk {
+            abiFilters "x86", "armeabi-v7a"
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.github.stfalcon:chatkit:0.3.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+}
