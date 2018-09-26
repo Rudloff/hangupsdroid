@@ -21,15 +21,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        App app = (App) getApplicationContext();
         Button loginButton = findViewById(R.id.btn_login);
         EditText passwordText = findViewById(R.id.input_password);
-
+        RefreshTokenCache cache = new RefreshTokenCache(this);
         LoginButtonListener listener = new LoginButtonListener(this);
+
         loginButton.setOnClickListener(listener);
         passwordText.setOnEditorActionListener(listener);
 
-        RefreshTokenCache cache = new RefreshTokenCache(this);
-        if (cache.get() != null) {
+        if (app.pythonApp.get("client") != null) {
+            onConnected();
+        } else if (cache.get() != null) {
             login();
         }
     }
