@@ -20,7 +20,6 @@ public class ConversationListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation_list);
-        setTitle("HangupsDroid");
 
         App app = (App) getApplicationContext();
 
