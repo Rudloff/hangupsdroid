@@ -1,7 +1,6 @@
 package pro.rudloff.hangupsdroid.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -14,7 +13,7 @@ import pro.rudloff.hangupsdroid.listeners.ConversationClickListener;
 import pro.rudloff.hangupsdroid.runnables.AddConversationRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 
-public class ConversationListActivity extends AppCompatActivity {
+public class ConversationListActivity extends Activity {
 
     private DialogsListAdapter<Conversation> conversationAdapter;
 
