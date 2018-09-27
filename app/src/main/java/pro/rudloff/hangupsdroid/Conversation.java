@@ -19,6 +19,13 @@ public class Conversation implements IDialog {
         return conversation.get("id_").toString();
     }
 
+    public User getSelfUser() {
+        Python py = Python.getInstance();
+        PyObject hangupsdroid = py.getModule("hangupsdroid");
+
+        return new User(hangupsdroid.callAttr("getSelfUser", conversation.get("users")));
+    }
+
     public String getDialogPhoto() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();

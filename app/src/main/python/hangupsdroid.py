@@ -35,21 +35,45 @@ def getOtherUser(users):
         if not user.is_self:
             return user
 
+def getSelfUser(users):
+    for user in users:
+        if user.is_self:
+            return user
+
 class App():
     def connected(self, activity):
         activity.onConnected()
 
+    def getUser(self, id):
+        return self.user_list.get_user(id)
+
+    def getConversation(self, id):
+        return self.conversation_list.get(id)
+
     async def getConversations(self, activity):
-        user_list, conversation_list = (
+        self.user_list, self.conversation_list = (
             await hangups.build_user_conversation_list(self.client)
         )
 
-        conversations = conversation_list.get_all()
+        conversations = self.conversation_list.get_all()
         conversations.reverse()
         activity.addConversations(conversations)
 
     def addConversations(self, activity):
         self.coroutine_queue.put(self.getConversations(activity))
+
+    async def getMessages(self, activity, conversation):
+        conversation_events = await conversation.get_events()
+        messages = []
+
+        for event in conversation.events:
+            if isinstance(event, hangups.ChatMessageEvent):
+                messages.append(event)
+
+        activity.addMessages(messages)
+
+    def addMessages(self, activity, conversationId):
+        self.coroutine_queue.put(self.getMessages(activity, self.getConversation(conversationId)))
 
     async def getAuth(self, activity, prompt, cache):
         cookies = hangups.get_auth(prompt, cache)

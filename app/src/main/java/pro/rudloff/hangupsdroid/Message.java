@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class Message implements IMessage {
+public class Message implements IMessage {
 
     private PyObject message;
     private PyObject user;

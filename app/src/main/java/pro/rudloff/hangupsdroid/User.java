@@ -3,7 +3,7 @@ package pro.rudloff.hangupsdroid;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.commons.models.IUser;
 
-class User implements IUser {
+public class User implements IUser {
 
     private PyObject user;
 
