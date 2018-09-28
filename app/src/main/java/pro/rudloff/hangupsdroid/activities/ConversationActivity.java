@@ -22,6 +22,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         App app = (App) getApplicationContext();
 
