@@ -28,7 +28,7 @@ def getNumUnread(conversation):
         not conversation.get_user(event.user_id).is_self])
 
 def getLastMessage(conversation):
-    for event in conversation.events:
+    for event in reversed(conversation.events):
         if isinstance(event, hangups.ChatMessageEvent):
             return event
 

@@ -35,6 +35,11 @@ public class ConversationListActivity extends Activity {
         app.pythonApp.callAttr("addConversations", this);
     }
 
+    protected void onRestart() {
+        super.onRestart();
+        conversationAdapter.notifyDataSetChanged();
+    }
+
     public void addConversations(PyObject conversationList) {
         App app = (App) getApplicationContext();
 
