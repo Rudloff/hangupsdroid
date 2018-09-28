@@ -12,7 +12,6 @@ import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
-import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 
 public class ConversationActivity extends Activity implements OnLoadMoreListener {
 
@@ -37,9 +36,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                 new MessagesListAdapter<Message>(
                         conversation.getSelfUser().getId(), new AvatarLoader());
         messagesListView.setAdapter(messageAdapter);
-
-        runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.conversation_dialog)));
-
+        messageAdapter.setLoadMoreListener(this);
         messageAdapter.addToEnd(conversation.getMessages(this), true);
         app.pythonApp.callAttr(
                 "addMessages", this, conversation.getId(), conversation.getFirstMessage().getId());
