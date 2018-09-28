@@ -23,7 +23,7 @@ public class Conversation implements IDialog {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        return new User(hangupsdroid.callAttr("getSelfUser", conversation.get("users")));
+        return new User(hangupsdroid.callAttr("get_self_user", conversation.get("users")));
     }
 
     public String getDialogPhoto() {
@@ -34,7 +34,7 @@ public class Conversation implements IDialog {
         PyObject conversationUsers = conversation.get("users");
         int nbUsers = builtins.callAttr("len", conversationUsers).toJava(int.class);
         if (nbUsers <= 2) {
-            PyObject otherUser = hangupsdroid.callAttr("getOtherUser", conversationUsers);
+            PyObject otherUser = hangupsdroid.callAttr("get_other_user", conversationUsers);
             if (otherUser != null) {
                 User user = new User(otherUser);
                 return user.getAvatar();
@@ -62,7 +62,7 @@ public class Conversation implements IDialog {
         int nbUsers = builtins.callAttr("len", conversationUsers).toJava(int.class);
         if (nbUsers <= 2) {
             // If this is not a group conversation, we only display the other user.
-            PyObject otherUser = hangupsdroid.callAttr("getOtherUser", conversationUsers);
+            PyObject otherUser = hangupsdroid.callAttr("get_other_user", conversationUsers);
             if (otherUser != null) {
                 users.add(new User(otherUser));
             }
@@ -70,7 +70,7 @@ public class Conversation implements IDialog {
             for (int i = 0;
                     i < builtins.callAttr("len", conversationUsers).toJava(int.class);
                     i++) {
-                users.add(new User(hangupsdroid.callAttr("getFromArray", conversationUsers, i)));
+                users.add(new User(hangupsdroid.callAttr("get_from_array", conversationUsers, i)));
             }
         }
 
@@ -81,7 +81,7 @@ public class Conversation implements IDialog {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        PyObject message = hangupsdroid.callAttr("getLastMessage", conversation);
+        PyObject message = hangupsdroid.callAttr("get_last_message", conversation);
         if (message != null) {
             return new Message(
                     message, new User(conversation.callAttr("get_user", message.get("user_id"))));
@@ -94,7 +94,7 @@ public class Conversation implements IDialog {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        PyObject message = hangupsdroid.callAttr("getFirstMessage", conversation);
+        PyObject message = hangupsdroid.callAttr("get_first_message", conversation);
         if (message != null) {
             return new Message(
                     message, new User(conversation.callAttr("get_user", message.get("user_id"))));
@@ -111,7 +111,7 @@ public class Conversation implements IDialog {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        return hangupsdroid.callAttr("getNumUnread", conversation).toJava(int.class);
+        return hangupsdroid.callAttr("get_num_unread", conversation).toJava(int.class);
     }
 
     public ArrayList<Message> getMessages(Activity activity) {
@@ -122,13 +122,14 @@ public class Conversation implements IDialog {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         ArrayList<Message> messages = new ArrayList<Message>();
-        PyObject messageList = hangupsdroid.callAttr("getChatMessages", conversation.get("events"));
+        PyObject messageList =
+                hangupsdroid.callAttr("get_chat_messages", conversation.get("events"));
         for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
-            PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
+            PyObject message = hangupsdroid.callAttr("get_from_array", messageList, i);
             messages.add(
                     new Message(
                             message,
-                            new User(app.pythonApp.callAttr("getUser", message.get("user_id")))));
+                            new User(app.pythonApp.callAttr("get_user", message.get("user_id")))));
         }
         return messages;
     }

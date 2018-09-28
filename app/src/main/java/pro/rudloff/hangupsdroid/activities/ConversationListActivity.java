@@ -37,7 +37,7 @@ public class ConversationListActivity extends Activity
         runOnUiThread(
                 new ProgressDialogRunnable(this, getString(R.string.conversation_list_dialog)));
 
-        app.pythonApp.callAttr("addConversations", this);
+        app.pythonApp.callAttr("add_conversations", this);
     }
 
     public void onDialogClick(Conversation conversation) {
@@ -51,14 +51,14 @@ public class ConversationListActivity extends Activity
         conversationAdapter.notifyDataSetChanged();
     }
 
-    public void addConversations(PyObject conversationList) {
+    public void onNewConversations(PyObject conversationList) {
         App app = (App) getApplicationContext();
 
         runOnUiThread(new AddConversationRunnable(conversationAdapter, conversationList));
         app.progressDialog.dismiss();
     }
 
-    public void onEvent(PyObject event) {
+    public void onChatMessageEvent(PyObject event) {
         App app = (App) getApplicationContext();
 
         runOnUiThread(
@@ -66,10 +66,11 @@ public class ConversationListActivity extends Activity
                         conversationAdapter,
                         new Conversation(
                                 app.pythonApp.callAttr(
-                                        "getConversation", event.get("conversation_id"))),
+                                        "get_conversation", event.get("conversation_id"))),
                         new Message(
                                 event,
                                 new User(
-                                        app.pythonApp.callAttr("getUser", event.get("user_id"))))));
+                                        app.pythonApp.callAttr(
+                                                "get_user", event.get("user_id"))))));
     }
 }

@@ -33,7 +33,7 @@ public class Message implements IMessage, Image {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        PyObject attachment = hangupsdroid.callAttr("getAttachment", message);
+        PyObject attachment = hangupsdroid.callAttr("get_attachment", message);
         if (attachment != null) {
             return attachment.toString();
         }

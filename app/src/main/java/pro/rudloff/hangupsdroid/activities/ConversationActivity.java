@@ -28,7 +28,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         conversation =
                 new Conversation(
                         app.pythonApp.callAttr(
-                                "getConversation", getIntent().getStringExtra("conversationId")));
+                                "get_conversation", getIntent().getStringExtra("conversationId")));
         setTitle(conversation.getDialogName());
 
         MessagesList messagesListView = findViewById(R.id.messagesList);
@@ -39,10 +39,10 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         messageAdapter.setLoadMoreListener(this);
         messageAdapter.addToEnd(conversation.getMessages(this), true);
         app.pythonApp.callAttr(
-                "addMessages", this, conversation.getId(), conversation.getFirstMessage().getId());
+                "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
-    public void addMessages(PyObject messageList) {
+    public void onNewMessages(PyObject messageList) {
         App app = (App) getApplicationContext();
 
         runOnUiThread(new AddMessageRunnable(this, messageAdapter, messageList));
@@ -53,10 +53,10 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         App app = (App) getApplicationContext();
 
         app.pythonApp.callAttr(
-                "addMessages", this, conversation.getId(), conversation.getFirstMessage().getId());
+                "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
-    public void onEvent(PyObject event) {
+    public void onChatMessageEvent(PyObject event) {
         App app = (App) getApplicationContext();
 
         runOnUiThread(
@@ -66,6 +66,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                         new Message(
                                 event,
                                 new User(
-                                        app.pythonApp.callAttr("getUser", event.get("user_id"))))));
+                                        app.pythonApp.callAttr(
+                                                "get_user", event.get("user_id"))))));
     }
 }

@@ -46,13 +46,13 @@ public class AddMessageRunnable implements Runnable {
         } else if (messageList != null) {
             ArrayList<Message> messages = new ArrayList<Message>();
             for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
-                PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
+                PyObject message = hangupsdroid.callAttr("get_from_array", messageList, i);
                 messages.add(
                         new Message(
                                 message,
                                 new User(
                                         app.pythonApp.callAttr(
-                                                "getUser", message.get("user_id")))));
+                                                "get_user", message.get("user_id")))));
             }
 
             messageAdapter.addToEnd(messages, true);

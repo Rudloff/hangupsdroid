@@ -52,7 +52,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         new PythonTask(this, true)
                 .execute(
                         app.pythonApp.callAttr(
-                                "getAuth",
+                                "get_auth",
                                 this,
                                 new CredentialsPrompt(this),
                                 new RefreshTokenCache(this)));

@@ -25,7 +25,7 @@ public class AddConversationRunnable implements Runnable {
         ArrayList<Conversation> conversations = new ArrayList<Conversation>();
         for (int i = 0; i < builtins.callAttr("len", conversationList).toJava(int.class); i++) {
             conversations.add(
-                    new Conversation(hangupsdroid.callAttr("getFromArray", conversationList, i)));
+                    new Conversation(hangupsdroid.callAttr("get_from_array", conversationList, i)));
         }
 
         conversationAdapter.setItems(conversations);

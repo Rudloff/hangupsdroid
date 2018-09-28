@@ -1,44 +1,54 @@
-from java import jclass
+"""Main module used by HangupsDroid"""
 
 import asyncio
-import hangups
-import janus
 import logging
 import sys
+import hangups
+import janus
 
 class CoroutineQueue:
+    """Queue used to start asynchronous task from a synchronous function
+    (Usually from a Java method.)
+    """
     def __init__(self):
         loop = asyncio.get_event_loop()
         self._queue = janus.Queue(loop=loop)
 
     def put(self, coro):
+        """Add a new task in the queue (synchronously)"""
         assert asyncio.iscoroutine(coro)
         self._queue.sync_q.put(coro)
 
     async def consume(self):
+        """ Starts the queue and waits for new tasks"""
         while True:
             coro = await self._queue.async_q.get()
             assert asyncio.iscoroutine(coro)
             await coro
             self._queue.async_q.task_done()
 
-def getNumUnread(conversation):
+def get_num_unread(conversation):
+    """Return the number of unread messages in the conversation"""
     return len([event for event in conversation.unread_events if
-        isinstance(event, hangups.ChatMessageEvent) and
-        not conversation.get_user(event.user_id).is_self])
+                isinstance(event, hangups.ChatMessageEvent) and
+                not conversation.get_user(event.user_id).is_self])
 
-def getMessage(events):
+def get_message(events):
+    """Return the first chat message from the list"""
     for event in events:
         if isinstance(event, hangups.ChatMessageEvent):
             return event
 
-def getLastMessage(conversation):
-    return getMessage(reversed(conversation.events))
+def get_last_message(conversation):
+    """Return the last chat message in this conversation"""
+    return get_message(reversed(conversation.events))
 
-def getFirstMessage(conversation):
-    return getMessage(conversation.events)
+def get_first_message(conversation):
+    """Return the first chat message in this conversation"""
+    return get_message(conversation.events)
 
-def getChatMessages(conversation_events):
+def get_chat_messages(conversation_events):
+    """Return all events in the list that are chat messages"""
     messages = []
 
     for event in conversation_events:
@@ -47,80 +57,117 @@ def getChatMessages(conversation_events):
 
     return messages
 
-def getOtherUser(users):
+def get_other_user(users):
+    """Get the first non-self user from the list
+    (It only returns one user so it is not useful for group conversations.)
+    """
     for user in users:
         if not user.is_self:
             return user
 
-def getSelfUser(users):
+def get_self_user(users):
+    """Get the first self user from the list
+    (There should never be more than one.)
+    """
     for user in users:
         if user.is_self:
             return user
 
-def getFromArray(array, index):
+def get_from_array(array, index):
+    """Proxy function to get an element from an array
+    We need this because Chaqopy does not provide a way to use the [] syntax.
+    """
     return array[index]
 
-def getAttachment(event):
+def get_attachment(event):
+    """Return the first attachment included in an event (if any)"""
     if len(event.attachments) > 0:
         return event.attachments[0]
 
+def event_received(activity, event):
+    """Call the activity callback if the event is a chat message"""
+    if isinstance(event, hangups.ChatMessageEvent):
+        activity.onChatMessageEvent(event)
+
+def connected(activity):
+    """Proxy function to call the activity callback
+    We need this because Python does not think Java methods are callables.
+    """
+    activity.onConnected()
+
 class App():
-    def connected(self, activity):
-        activity.onConnected()
+    """Main class used by HangupsDroid
+    Used to manage the hangups client.
+    """
 
-    def getUser(self, id):
-        return self.user_list.get_user(id)
+    def __init__(self):
+        self.client = None
+        self.coroutine_queue = None
+        self.conversation_list = None
+        self.user_list = None
 
-    def getConversation(self, id):
-        return self.conversation_list.get(id)
+    def get_user(self, user_id):
+        """Return the user with the specified ID"""
+        return self.user_list.get_user(user_id)
 
-    async def getConversations(self, activity):
+    def get_conversation(self, conversation_id):
+        """Return the conversation with the specified ID"""
+        return self.conversation_list.get(conversation_id)
+
+    async def get_conversations(self, activity):
+        """Fetch all conversations and pass them to the actibity callback"""
         self.user_list, self.conversation_list = (
             await hangups.build_user_conversation_list(self.client)
         )
 
-        self.conversation_list.on_event.add_observer(lambda event: self.eventReceived(activity, event))
+        self.conversation_list.on_event.add_observer(lambda event: event_received(activity, event))
 
         conversations = self.conversation_list.get_all()
         conversations.reverse()
-        activity.addConversations(conversations)
+        activity.onNewConversations(conversations)
 
-    def addConversations(self, activity):
-        self.coroutine_queue.put(self.getConversations(activity))
+    def add_conversations(self, activity):
+        """Tell the coroutine queue to fetch conversations"""
+        self.coroutine_queue.put(self.get_conversations(activity))
 
-    def eventReceived(self, activity, event):
-        if isinstance(event, hangups.ChatMessageEvent):
-            activity.onEvent(event);
+    async def get_older_messages(self, activity, conversation, last_message_id=None):
+        """Fetch older messages in this conversation and call the activity callback"""
+        conversation_events = await conversation.get_events(last_message_id)
 
-    async def getMessages(self, activity, conversation, lastMessageId = None):
-        conversation_events = await conversation.get_events(lastMessageId)
+        activity.onNewMessages(get_chat_messages(conversation_events))
 
-        activity.addMessages(getChatMessages(conversation_events))
+    def add_messages(self, activity, conversation_id, last_message_id=None):
+        """Tell the coroutine queue to fetch new messages for this conversation
+        Also adds an event observer on the conversation.
+        """
+        conversation = self.get_conversation(conversation_id)
+        conversation.on_event.add_observer(lambda event: event_received(activity, event))
+        self.coroutine_queue.put(self.get_older_messages(activity, conversation, last_message_id))
 
-    def addMessages(self, activity, conversationId, lastMessageId = None):
-        conversation = self.getConversation(conversationId);
-        conversation.on_event.add_observer(lambda event: self.eventReceived(activity, event))
-        self.coroutine_queue.put(self.getMessages(activity, conversation, lastMessageId))
-
-    async def getAuth(self, activity, prompt, cache):
+    async def get_auth(self, activity, prompt, cache):
+        """Get auth cookies and pass them to the activity callback"""
         cookies = hangups.get_auth(prompt, cache)
         activity.onAuth(cookies)
 
     async def connect(self, activity, cookies):
+        """Connect to hangouts and start the coroutine queue
+        This keeps running as long as hangups is connected.
+        """
         self.client = hangups.Client(cookies)
 
         # Redirect logging to logcat.
-        root = logging.getLogger()
-        root.setLevel(logging.DEBUG)
-        ch = logging.StreamHandler(sys.stdout)
-        ch.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        ch.setFormatter(formatter)
-        root.addHandler(ch)
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setLevel(logging.INFO)
+        stream_handler.setFormatter(
+            logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        )
+        logger.addHandler(stream_handler)
 
         # The CoroutineQueue needs to be created inside the AsyncTask.
         self.coroutine_queue = CoroutineQueue()
 
-        self.client.on_connect.add_observer(lambda: self.connected(activity))
+        self.client.on_connect.add_observer(lambda: connected(activity))
         coros = [self.client.connect(), self.coroutine_queue.consume()]
         await asyncio.gather(*coros)
