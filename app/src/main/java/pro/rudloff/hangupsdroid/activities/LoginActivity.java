@@ -45,7 +45,7 @@ public class LoginActivity extends Activity {
 
         runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.auth_dialog)));
 
-        new PythonTask(this)
+        new PythonTask(this, true)
                 .execute(
                         app.pythonApp.callAttr(
                                 "getAuth",

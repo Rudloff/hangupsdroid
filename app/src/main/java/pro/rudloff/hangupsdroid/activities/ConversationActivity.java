@@ -10,6 +10,7 @@ import pro.rudloff.hangupsdroid.AvatarLoader;
 import pro.rudloff.hangupsdroid.Conversation;
 import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.R;
+import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 
@@ -55,5 +56,18 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
 
         app.pythonApp.callAttr(
                 "addMessages", this, conversation.getId(), conversation.getLastMessage().getId());
+    }
+
+    public void onEvent(PyObject event) {
+        App app = (App) getApplicationContext();
+
+        runOnUiThread(
+                new AddMessageRunnable(
+                        this,
+                        messageAdapter,
+                        new Message(
+                                event,
+                                new User(
+                                        app.pythonApp.callAttr("getUser", event.get("user_id"))))));
     }
 }

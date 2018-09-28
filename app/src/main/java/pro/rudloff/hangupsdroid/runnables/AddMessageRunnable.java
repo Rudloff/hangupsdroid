@@ -14,6 +14,7 @@ public class AddMessageRunnable implements Runnable {
     private Activity activity;
     private MessagesListAdapter<Message> messageAdapter;
     private PyObject messageList;
+    private Message message;
 
     public AddMessageRunnable(
             Activity newActivity,
@@ -24,6 +25,15 @@ public class AddMessageRunnable implements Runnable {
         messageList = newMessageList;
     }
 
+    public AddMessageRunnable(
+            Activity newActivity,
+            MessagesListAdapter<Message> newMessageAdapter,
+            Message newMessage) {
+        activity = newActivity;
+        messageAdapter = newMessageAdapter;
+        message = newMessage;
+    }
+
     public void run() {
         App app = (App) activity.getApplicationContext();
 
@@ -31,15 +41,21 @@ public class AddMessageRunnable implements Runnable {
         PyObject builtins = py.getBuiltins();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        ArrayList<Message> messages = new ArrayList<Message>();
-        for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
-            PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
-            messages.add(
-                    new Message(
-                            message,
-                            new User(app.pythonApp.callAttr("getUser", message.get("user_id")))));
-        }
+        if (message != null) {
+            messageAdapter.addToStart(message, false);
+        } else if (messageList != null) {
+            ArrayList<Message> messages = new ArrayList<Message>();
+            for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
+                PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
+                messages.add(
+                        new Message(
+                                message,
+                                new User(
+                                        app.pythonApp.callAttr(
+                                                "getUser", message.get("user_id")))));
+            }
 
-        messageAdapter.addToEnd(messages, true);
+            messageAdapter.addToEnd(messages, true);
+        }
     }
 }

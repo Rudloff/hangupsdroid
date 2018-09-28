@@ -3,6 +3,8 @@ from java import jclass
 import asyncio
 import hangups
 import janus
+import logging
+import sys
 
 class CoroutineQueue:
     def __init__(self):
@@ -74,13 +76,19 @@ class App():
     def addConversations(self, activity):
         self.coroutine_queue.put(self.getConversations(activity))
 
+    def eventReceived(self, activity, event):
+        if isinstance(event, hangups.ChatMessageEvent):
+            activity.onEvent(event);
+
     async def getMessages(self, activity, conversation, lastMessageId = None):
         conversation_events = await conversation.get_events(lastMessageId)
 
         activity.addMessages(getChatMessages(conversation_events))
 
     def addMessages(self, activity, conversationId, lastMessageId = None):
-        self.coroutine_queue.put(self.getMessages(activity, self.getConversation(conversationId), lastMessageId))
+        conversation = self.getConversation(conversationId);
+        conversation.on_event.add_observer(lambda event: self.eventReceived(activity, event))
+        self.coroutine_queue.put(self.getMessages(activity, conversation, lastMessageId))
 
     async def getAuth(self, activity, prompt, cache):
         cookies = hangups.get_auth(prompt, cache)
@@ -88,6 +96,15 @@ class App():
 
     async def connect(self, activity, cookies):
         self.client = hangups.Client(cookies)
+
+        # Redirect logging to logcat.
+        root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
+        ch = logging.StreamHandler(sys.stdout)
+        ch.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        ch.setFormatter(formatter)
+        root.addHandler(ch)
 
         # The CoroutineQueue needs to be created inside the AsyncTask.
         self.coroutine_queue = CoroutineQueue()

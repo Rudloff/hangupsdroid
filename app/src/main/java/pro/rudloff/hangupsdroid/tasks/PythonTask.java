@@ -14,9 +14,15 @@ public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
 
     // Use a weak reference so the activity can be garbage collected.
     private WeakReference<Activity> activityReference;
+    private boolean catchExceptions = false;
 
     public PythonTask(Activity activity) {
         activityReference = new WeakReference<Activity>(activity);
+    }
+
+    public PythonTask(Activity activity, boolean newCatchExceptions) {
+        this(activity);
+        catchExceptions = newCatchExceptions;
     }
 
     protected Boolean doInBackground(PyObject... tasks) {
@@ -28,18 +34,21 @@ public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
             try {
                 loop.callAttr("run_until_complete", task);
             } catch (PyException error) {
-                Activity activity = activityReference.get();
-                if (activity == null) {
-                    Log.e("hangupsdroid", error.getMessage());
-                } else {
+                if (catchExceptions) {
+                    Activity activity = activityReference.get();
                     App app = (App) activity.getApplicationContext();
 
-                    app.progressDialog.dismiss();
-                    activity.runOnUiThread(new ToastRunnable(activity, error.getMessage()));
+                    Log.e("hangupsdroid", error.getMessage());
+                    if (activity != null) {
+                        app.progressDialog.dismiss();
+                        activity.runOnUiThread(new ToastRunnable(activity, error.getMessage()));
+                    }
+                } else {
+                    throw error;
                 }
             }
-            loop.callAttr("close");
         }
+        loop.callAttr("close");
 
         return true;
     }
