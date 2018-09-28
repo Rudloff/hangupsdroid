@@ -2,19 +2,24 @@ package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.CredentialsPrompt;
 import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.RefreshTokenCache;
-import pro.rudloff.hangupsdroid.listeners.LoginButtonListener;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 import pro.rudloff.hangupsdroid.tasks.PythonTask;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,10 +29,9 @@ public class LoginActivity extends Activity {
         Button loginButton = findViewById(R.id.btn_login);
         EditText passwordText = findViewById(R.id.input_password);
         RefreshTokenCache cache = new RefreshTokenCache(this);
-        LoginButtonListener listener = new LoginButtonListener(this);
 
-        loginButton.setOnClickListener(listener);
-        passwordText.setOnEditorActionListener(listener);
+        loginButton.setOnClickListener(this);
+        passwordText.setOnEditorActionListener(this);
 
         if (app.pythonApp.get("client") != null) {
             onConnected();
@@ -52,6 +56,19 @@ public class LoginActivity extends Activity {
                                 this,
                                 new CredentialsPrompt(this),
                                 new RefreshTokenCache(this)));
+    }
+
+    public void onClick(View view) {
+        login();
+    }
+
+    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            login();
+            return true;
+        }
+
+        return false;
     }
 
     public void onConnected() {

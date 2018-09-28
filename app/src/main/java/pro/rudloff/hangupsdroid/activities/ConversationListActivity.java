@@ -1,9 +1,11 @@
 package pro.rudloff.hangupsdroid.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+import com.stfalcon.chatkit.dialogs.DialogsListAdapter.OnDialogClickListener;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.AvatarLoader;
 import pro.rudloff.hangupsdroid.Conversation;
@@ -11,12 +13,12 @@ import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.MessageDateFormatter;
 import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.User;
-import pro.rudloff.hangupsdroid.listeners.ConversationClickListener;
 import pro.rudloff.hangupsdroid.runnables.AddConversationRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 import pro.rudloff.hangupsdroid.runnables.UpdateConversationRunnable;
 
-public class ConversationListActivity extends Activity {
+public class ConversationListActivity extends Activity
+        implements OnDialogClickListener<Conversation> {
 
     private DialogsListAdapter<Conversation> conversationAdapter;
 
@@ -29,13 +31,19 @@ public class ConversationListActivity extends Activity {
         DialogsList dialogsListView = findViewById(R.id.conversationList);
         conversationAdapter = new DialogsListAdapter<Conversation>(new AvatarLoader());
         conversationAdapter.setDatesFormatter(new MessageDateFormatter());
-        conversationAdapter.setOnDialogClickListener(new ConversationClickListener(this));
+        conversationAdapter.setOnDialogClickListener(this);
         dialogsListView.setAdapter(conversationAdapter);
 
         runOnUiThread(
                 new ProgressDialogRunnable(this, getString(R.string.conversation_list_dialog)));
 
         app.pythonApp.callAttr("addConversations", this);
+    }
+
+    public void onDialogClick(Conversation conversation) {
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra("conversationId", conversation.getId());
+        startActivity(intent);
     }
 
     protected void onRestart() {
