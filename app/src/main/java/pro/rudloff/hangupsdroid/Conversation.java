@@ -90,6 +90,19 @@ public class Conversation implements IDialog {
         return null;
     }
 
+    public IMessage getFirstMessage() {
+        Python py = Python.getInstance();
+        PyObject hangupsdroid = py.getModule("hangupsdroid");
+
+        PyObject message = hangupsdroid.callAttr("getFirstMessage", conversation);
+        if (message != null) {
+            return new Message(
+                    message, new User(conversation.callAttr("get_user", message.get("user_id"))));
+        }
+
+        return null;
+    }
+
     public void setLastMessage(IMessage message) {
         // We the hangups conversation object to manage the last message.
     }

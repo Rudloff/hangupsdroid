@@ -41,7 +41,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
 
         messageAdapter.addToEnd(conversation.getMessages(this), true);
         app.pythonApp.callAttr(
-                "addMessages", this, conversation.getId(), conversation.getLastMessage().getId());
+                "addMessages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
     public void addMessages(PyObject messageList) {
@@ -55,7 +55,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         App app = (App) getApplicationContext();
 
         app.pythonApp.callAttr(
-                "addMessages", this, conversation.getId(), conversation.getLastMessage().getId());
+                "addMessages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
     public void onEvent(PyObject event) {

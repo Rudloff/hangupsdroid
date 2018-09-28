@@ -7,11 +7,14 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.AvatarLoader;
 import pro.rudloff.hangupsdroid.Conversation;
+import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.MessageDateFormatter;
 import pro.rudloff.hangupsdroid.R;
+import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.listeners.ConversationClickListener;
 import pro.rudloff.hangupsdroid.runnables.AddConversationRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
+import pro.rudloff.hangupsdroid.runnables.UpdateConversationRunnable;
 
 public class ConversationListActivity extends Activity {
 
@@ -45,5 +48,20 @@ public class ConversationListActivity extends Activity {
 
         runOnUiThread(new AddConversationRunnable(conversationAdapter, conversationList));
         app.progressDialog.dismiss();
+    }
+
+    public void onEvent(PyObject event) {
+        App app = (App) getApplicationContext();
+
+        runOnUiThread(
+                new UpdateConversationRunnable(
+                        conversationAdapter,
+                        new Conversation(
+                                app.pythonApp.callAttr(
+                                        "getConversation", event.get("conversation_id"))),
+                        new Message(
+                                event,
+                                new User(
+                                        app.pythonApp.callAttr("getUser", event.get("user_id"))))));
     }
 }

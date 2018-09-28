@@ -27,10 +27,16 @@ def getNumUnread(conversation):
         isinstance(event, hangups.ChatMessageEvent) and
         not conversation.get_user(event.user_id).is_self])
 
-def getLastMessage(conversation):
-    for event in reversed(conversation.events):
+def getMessage(events):
+    for event in events:
         if isinstance(event, hangups.ChatMessageEvent):
             return event
+
+def getLastMessage(conversation):
+    return getMessage(reversed(conversation.events))
+
+def getFirstMessage(conversation):
+    return getMessage(conversation.events)
 
 def getChatMessages(conversation_events):
     messages = []
@@ -68,6 +74,8 @@ class App():
         self.user_list, self.conversation_list = (
             await hangups.build_user_conversation_list(self.client)
         )
+
+        self.conversation_list.on_event.add_observer(lambda event: self.eventReceived(activity, event))
 
         conversations = self.conversation_list.get_all()
         conversations.reverse()
