@@ -60,6 +60,10 @@ def getSelfUser(users):
 def getFromArray(array, index):
     return array[index]
 
+def getAttachment(event):
+    if len(event.attachments) > 0:
+        return event.attachments[0]
+
 class App():
     def connected(self, activity):
         activity.onConnected()

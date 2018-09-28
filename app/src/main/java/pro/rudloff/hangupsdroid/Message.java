@@ -2,14 +2,16 @@ package pro.rudloff.hangupsdroid;
 
 import android.util.Log;
 import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.stfalcon.chatkit.commons.models.IMessage;
+import com.stfalcon.chatkit.commons.models.MessageContentType.Image;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Message implements IMessage {
+public class Message implements IMessage, Image {
 
     private PyObject message;
     private User user;
@@ -25,6 +27,18 @@ public class Message implements IMessage {
 
     public String getText() {
         return message.get("text").toString();
+    }
+
+    public String getImageUrl() {
+        Python py = Python.getInstance();
+        PyObject hangupsdroid = py.getModule("hangupsdroid");
+
+        PyObject attachment = hangupsdroid.callAttr("getAttachment", message);
+        if (attachment != null) {
+            return attachment.toString();
+        }
+
+        return null;
     }
 
     public User getUser() {
