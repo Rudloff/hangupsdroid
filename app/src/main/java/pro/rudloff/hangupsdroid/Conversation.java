@@ -1,5 +1,6 @@
 package pro.rudloff.hangupsdroid;
 
+import android.app.Activity;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.stfalcon.chatkit.commons.models.IDialog;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 public class Conversation implements IDialog {
 
     private PyObject conversation;
-    private IMessage lastMessage;
 
     public Conversation(PyObject newConversation) {
         conversation = newConversation;
@@ -54,11 +54,12 @@ public class Conversation implements IDialog {
     public ArrayList<User> getUsers() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();
+        PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         ArrayList<User> users = new ArrayList<User>();
         PyObject conversationUsers = conversation.get("users");
         for (int i = 0; i < builtins.callAttr("len", conversationUsers).toJava(int.class); i++) {
-            users.add(new User(conversationUsers.callAttr("pop", i)));
+            users.add(new User(hangupsdroid.callAttr("getFromArray", conversationUsers, i)));
         }
 
         return users;
@@ -68,21 +69,17 @@ public class Conversation implements IDialog {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
-        if (lastMessage == null) {
-            PyObject message = hangupsdroid.callAttr("getLastMessage", conversation);
-            if (message != null) {
-                setLastMessage(
-                        new Message(
-                                message,
-                                conversation.callAttr("get_user", message.get("user_id"))));
-            }
+        PyObject message = hangupsdroid.callAttr("getLastMessage", conversation);
+        if (message != null) {
+            return new Message(
+                    message, new User(conversation.callAttr("get_user", message.get("user_id"))));
         }
 
-        return lastMessage;
+        return null;
     }
 
     public void setLastMessage(IMessage message) {
-        lastMessage = message;
+        // We the hangups conversation object to manage the last message.
     }
 
     public int getUnreadCount() {
@@ -90,5 +87,24 @@ public class Conversation implements IDialog {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         return hangupsdroid.callAttr("getNumUnread", conversation).toJava(int.class);
+    }
+
+    public ArrayList<Message> getMessages(Activity activity) {
+        App app = (App) activity.getApplicationContext();
+
+        Python py = Python.getInstance();
+        PyObject builtins = py.getBuiltins();
+        PyObject hangupsdroid = py.getModule("hangupsdroid");
+
+        ArrayList<Message> messages = new ArrayList<Message>();
+        PyObject messageList = hangupsdroid.callAttr("getChatMessages", conversation.get("events"));
+        for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
+            PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
+            messages.add(
+                    new Message(
+                            message,
+                            new User(app.pythonApp.callAttr("getUser", message.get("user_id")))));
+        }
+        return messages;
     }
 }

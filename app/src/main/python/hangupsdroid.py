@@ -30,6 +30,15 @@ def getLastMessage(conversation):
         if isinstance(event, hangups.ChatMessageEvent):
             return event
 
+def getChatMessages(conversation_events):
+    messages = []
+
+    for event in conversation_events:
+        if isinstance(event, hangups.ChatMessageEvent):
+            messages.append(event)
+
+    return messages
+
 def getOtherUser(users):
     for user in users:
         if not user.is_self:
@@ -39,6 +48,9 @@ def getSelfUser(users):
     for user in users:
         if user.is_self:
             return user
+
+def getFromArray(array, index):
+    return array[index]
 
 class App():
     def connected(self, activity):
@@ -62,18 +74,13 @@ class App():
     def addConversations(self, activity):
         self.coroutine_queue.put(self.getConversations(activity))
 
-    async def getMessages(self, activity, conversation):
-        conversation_events = await conversation.get_events()
-        messages = []
+    async def getMessages(self, activity, conversation, lastMessageId = None):
+        conversation_events = await conversation.get_events(lastMessageId)
 
-        for event in conversation.events:
-            if isinstance(event, hangups.ChatMessageEvent):
-                messages.append(event)
+        activity.addMessages(getChatMessages(conversation_events))
 
-        activity.addMessages(messages)
-
-    def addMessages(self, activity, conversationId):
-        self.coroutine_queue.put(self.getMessages(activity, self.getConversation(conversationId)))
+    def addMessages(self, activity, conversationId, lastMessageId = None):
+        self.coroutine_queue.put(self.getMessages(activity, self.getConversation(conversationId), lastMessageId))
 
     async def getAuth(self, activity, prompt, cache):
         cookies = hangups.get_auth(prompt, cache)

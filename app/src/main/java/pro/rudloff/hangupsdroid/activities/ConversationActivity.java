@@ -4,6 +4,7 @@ import android.os.Bundle;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+import com.stfalcon.chatkit.messages.MessagesListAdapter.OnLoadMoreListener;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.AvatarLoader;
 import pro.rudloff.hangupsdroid.Conversation;
@@ -12,9 +13,10 @@ import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 
-public class ConversationActivity extends Activity {
+public class ConversationActivity extends Activity implements OnLoadMoreListener {
 
     private MessagesListAdapter<Message> messageAdapter;
+    private Conversation conversation;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +24,7 @@ public class ConversationActivity extends Activity {
 
         App app = (App) getApplicationContext();
 
-        Conversation conversation =
+        conversation =
                 new Conversation(
                         app.pythonApp.callAttr(
                                 "getConversation", getIntent().getStringExtra("conversationId")));
@@ -36,7 +38,9 @@ public class ConversationActivity extends Activity {
 
         runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.conversation_dialog)));
 
-        app.pythonApp.callAttr("addMessages", this, conversation.getId());
+        messageAdapter.addToEnd(conversation.getMessages(this), true);
+        app.pythonApp.callAttr(
+                "addMessages", this, conversation.getId(), conversation.getLastMessage().getId());
     }
 
     public void addMessages(PyObject messageList) {
@@ -44,5 +48,12 @@ public class ConversationActivity extends Activity {
 
         runOnUiThread(new AddMessageRunnable(this, messageAdapter, messageList));
         app.progressDialog.dismiss();
+    }
+
+    public void onLoadMore(int page, int totalItemsCount) {
+        App app = (App) getApplicationContext();
+
+        app.pythonApp.callAttr(
+                "addMessages", this, conversation.getId(), conversation.getLastMessage().getId());
     }
 }

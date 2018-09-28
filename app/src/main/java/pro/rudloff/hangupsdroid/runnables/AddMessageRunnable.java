@@ -7,6 +7,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.ArrayList;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.Message;
+import pro.rudloff.hangupsdroid.User;
 
 public class AddMessageRunnable implements Runnable {
 
@@ -32,12 +33,13 @@ public class AddMessageRunnable implements Runnable {
 
         ArrayList<Message> messages = new ArrayList<Message>();
         for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
-            PyObject message = messageList.callAttr("pop", i);
+            PyObject message = hangupsdroid.callAttr("getFromArray", messageList, i);
             messages.add(
                     new Message(
-                            message, app.pythonApp.callAttr("getUser", message.get("user_id"))));
+                            message,
+                            new User(app.pythonApp.callAttr("getUser", message.get("user_id")))));
         }
 
-        messageAdapter.addToEnd(messages, false);
+        messageAdapter.addToEnd(messages, true);
     }
 }

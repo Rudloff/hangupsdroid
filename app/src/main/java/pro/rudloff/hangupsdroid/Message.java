@@ -12,9 +12,9 @@ import java.util.Locale;
 public class Message implements IMessage {
 
     private PyObject message;
-    private PyObject user;
+    private User user;
 
-    public Message(PyObject newMessage, PyObject newMessageUser) {
+    public Message(PyObject newMessage, User newMessageUser) {
         message = newMessage;
         user = newMessageUser;
     }
@@ -28,7 +28,7 @@ public class Message implements IMessage {
     }
 
     public User getUser() {
-        return new User(user);
+        return user;
     }
 
     public Date getCreatedAt() {
