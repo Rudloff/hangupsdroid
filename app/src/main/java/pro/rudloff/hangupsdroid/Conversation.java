@@ -58,8 +58,20 @@ public class Conversation implements IDialog {
 
         ArrayList<User> users = new ArrayList<User>();
         PyObject conversationUsers = conversation.get("users");
-        for (int i = 0; i < builtins.callAttr("len", conversationUsers).toJava(int.class); i++) {
-            users.add(new User(hangupsdroid.callAttr("getFromArray", conversationUsers, i)));
+
+        int nbUsers = builtins.callAttr("len", conversationUsers).toJava(int.class);
+        if (nbUsers <= 2) {
+            // If this is not a group conversation, we only display the other user.
+            PyObject otherUser = hangupsdroid.callAttr("getOtherUser", conversationUsers);
+            if (otherUser != null) {
+                users.add(new User(otherUser));
+            }
+        } else {
+            for (int i = 0;
+                    i < builtins.callAttr("len", conversationUsers).toJava(int.class);
+                    i++) {
+                users.add(new User(hangupsdroid.callAttr("getFromArray", conversationUsers, i)));
+            }
         }
 
         return users;
