@@ -16,7 +16,7 @@ public class RefreshTokenCache {
      * @param activity Current activity
      */
     public RefreshTokenCache(Activity activity) {
-        preferences = activity.getPreferences(Activity.MODE_PRIVATE);
+        preferences = activity.getSharedPreferences("login", Activity.MODE_PRIVATE);
     }
 
     /**
@@ -37,5 +37,12 @@ public class RefreshTokenCache {
         Editor editor = preferences.edit();
         editor.putString("refresh_token", token);
         editor.apply();
+    }
+
+    /** Clear the cache. */
+    public void clear() {
+        Editor editor = preferences.edit();
+        editor.remove("refresh_token");
+        editor.commit();
     }
 }

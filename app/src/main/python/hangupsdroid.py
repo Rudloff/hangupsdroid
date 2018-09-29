@@ -19,13 +19,20 @@ class CoroutineQueue:
         assert asyncio.iscoroutine(coro)
         self._queue.sync_q.put(coro)
 
+    async def close(self):
+        """Close the queue"""
+        self._queue.close()
+        await self._queue.wait_closed()
+
     async def consume(self):
         """ Starts the queue and waits for new tasks"""
-        while True:
+        while not self._queue.closed:
             coro = await self._queue.async_q.get()
             assert asyncio.iscoroutine(coro)
             await coro
-            self._queue.async_q.task_done()
+            # If the coroutine is closing the queue, task_done() will raise an error.
+            if not self._queue.closed:
+                self._queue.async_q.task_done()
 
 def get_num_unread(conversation):
     """Return the number of unread messages in the conversation"""
@@ -163,6 +170,17 @@ class App():
                 hangups.ChatMessageSegment.from_str(text)
             )
         )
+
+    async def disconnect(self):
+        """Disconnect hangups gracefully"""
+        await self.client.disconnect()
+        await self.coroutine_queue.close()
+        # We can't use this client anymore.
+        self.client = None
+
+    def logout(self):
+        """Tell the coroutine queue to logout"""
+        self.coroutine_queue.put(self.disconnect())
 
     async def get_auth(self, activity, prompt, cache):
         """Get auth cookies and pass them to the activity callback"""

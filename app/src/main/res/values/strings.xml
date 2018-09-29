@@ -8,4 +8,5 @@
   <string name="password_field">Password</string>
   <string name="login_btn">Login</string>
   <string name="yesterday">Yesterday</string>
+  <string name="action_logout">Logout</string>
 </resources>

@@ -2,6 +2,8 @@ package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -12,6 +14,7 @@ import pro.rudloff.hangupsdroid.Conversation;
 import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.MessageDateFormatter;
 import pro.rudloff.hangupsdroid.R;
+import pro.rudloff.hangupsdroid.RefreshTokenCache;
 import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddConversationRunnable;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
@@ -90,5 +93,40 @@ public class ConversationListActivity extends Activity
                                 new User(
                                         app.pythonApp.callAttr(
                                                 "get_user", event.get("user_id"))))));
+    }
+
+    /**
+     * Called when creating the menu for this activity.
+     *
+     * @param menu Menu
+     * @return Was the menu created?
+     */
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.conversation, menu);
+
+        return true;
+    }
+
+    /**
+     * Called when a menu item is selected.
+     *
+     * @param item Menu item that was selected.
+     * @return Was the action consumed?
+     */
+    public boolean onOptionsItemSelected(MenuItem item) {
+        App app = (App) getApplicationContext();
+        RefreshTokenCache cache = new RefreshTokenCache(this);
+
+        if (item.getItemId() == R.id.action_logout) {
+            cache.clear();
+
+            app.pythonApp.callAttr("logout");
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
