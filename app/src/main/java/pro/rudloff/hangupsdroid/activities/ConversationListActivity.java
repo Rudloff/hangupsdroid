@@ -38,8 +38,10 @@ public class ConversationListActivity extends Activity
         setContentView(R.layout.conversation_list);
 
         App app = (App) getApplicationContext();
+        // If the client has been killed by the OS, we go back to the login.
         if (app.pythonApp.get("client") == null) {
             Intent intent = new Intent(this, LoginActivity.class);
+            finishAffinity();
             startActivity(intent);
 
             return;
@@ -129,6 +131,7 @@ public class ConversationListActivity extends Activity
             app.pythonApp.callAttr("logout");
 
             Intent intent = new Intent(this, LoginActivity.class);
+            finishAffinity();
             startActivity(intent);
             return true;
         }

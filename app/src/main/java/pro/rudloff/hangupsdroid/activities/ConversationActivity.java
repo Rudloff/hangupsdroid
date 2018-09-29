@@ -37,8 +37,10 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         getSupportActionBar().setHomeButtonEnabled(true);
 
         App app = (App) getApplicationContext();
+        // If the client has been killed by the OS, we go back to the login.
         if (app.pythonApp.get("client") == null) {
             Intent intent = new Intent(this, LoginActivity.class);
+            finishAffinity();
             startActivity(intent);
 
             return;
