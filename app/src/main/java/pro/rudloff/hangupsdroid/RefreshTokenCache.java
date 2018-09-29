@@ -43,6 +43,6 @@ public class RefreshTokenCache {
     public void clear() {
         Editor editor = preferences.edit();
         editor.remove("refresh_token");
-        editor.commit();
+        editor.apply();
     }
 }
