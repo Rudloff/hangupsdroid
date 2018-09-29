@@ -3,10 +3,12 @@ package pro.rudloff.hangupsdroid.runnables;
 import android.app.Activity;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
+import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.ArrayList;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.Message;
+import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.User;
 
 /** Runnable used to add new messages to the view. */
@@ -65,7 +67,12 @@ public class AddMessageRunnable implements Runnable {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         if (message != null) {
-            messageAdapter.addToStart(message, true);
+            boolean isBottom = false;
+            MessagesList messagesListView = activity.findViewById(R.id.messagesList);
+            if (!messagesListView.canScrollVertically(1)) {
+                isBottom = true;
+            }
+            messageAdapter.addToStart(message, isBottom);
         } else if (messageList != null) {
             ArrayList<Message> messages = new ArrayList<Message>();
             for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
