@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /** Class used to manage messages. */
 public class Message implements IMessage, Image {
@@ -82,6 +83,7 @@ public class Message implements IMessage, Image {
      */
     public Date getCreatedAt() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String date = message.get("timestamp").toString();
         Date createdAt = null;
 
