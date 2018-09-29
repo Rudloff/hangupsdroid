@@ -46,11 +46,6 @@ public class ConversationListActivity extends Activity
         startActivity(intent);
     }
 
-    protected void onRestart() {
-        super.onRestart();
-        conversationAdapter.notifyDataSetChanged();
-    }
-
     public void onNewConversations(PyObject conversationList) {
         App app = (App) getApplicationContext();
 
