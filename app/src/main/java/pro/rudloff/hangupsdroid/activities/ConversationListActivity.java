@@ -30,7 +30,7 @@ public class ConversationListActivity extends Activity
 
         DialogsList dialogsListView = findViewById(R.id.conversationList);
         conversationAdapter = new DialogsListAdapter<Conversation>(new AvatarLoader());
-        conversationAdapter.setDatesFormatter(new MessageDateFormatter());
+        conversationAdapter.setDatesFormatter(new MessageDateFormatter(this));
         conversationAdapter.setOnDialogClickListener(this);
         dialogsListView.setAdapter(conversationAdapter);
 
