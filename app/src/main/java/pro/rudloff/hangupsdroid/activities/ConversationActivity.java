@@ -15,6 +15,7 @@ import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
+import pro.rudloff.hangupsdroid.runnables.HideViewRunnable;
 
 /** Activity that lists messages in a specific conversation. */
 public class ConversationActivity extends Activity implements OnLoadMoreListener, InputListener {
@@ -60,6 +61,8 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         messageAdapter.setLoadMoreListener(this);
         messageAdapter.addToEnd(conversation.getMessages(this), true);
         app.pythonApp.callAttr("add_conversation_observer", this, conversation.getId());
+
+        findViewById(R.id.conversationLoader).animate().alpha(1);
         app.pythonApp.callAttr(
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
 
@@ -76,7 +79,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         App app = (App) getApplicationContext();
 
         runOnUiThread(new AddMessageRunnable(this, messageAdapter, messageList));
-        app.progressDialog.dismiss();
+        runOnUiThread(new HideViewRunnable(findViewById(R.id.conversationLoader)));
         app.pythonApp.callAttr("set_read", conversation.getId());
     }
 
@@ -89,6 +92,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
     public void onLoadMore(int page, int totalItemsCount) {
         App app = (App) getApplicationContext();
 
+        findViewById(R.id.conversationLoader).animate().alpha(1);
         app.pythonApp.callAttr(
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
@@ -110,6 +114,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                                 new User(
                                         app.pythonApp.callAttr(
                                                 "get_user", event.get("user_id"))))));
+        runOnUiThread(new HideViewRunnable(findViewById(R.id.conversationLoader)));
         if (hasWindowFocus()) {
             app.pythonApp.callAttr("set_read", conversation.getId());
         }
