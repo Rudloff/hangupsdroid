@@ -10,21 +10,36 @@ import java.lang.ref.WeakReference;
 import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.runnables.ToastRunnable;
 
+/** Task used to run a Python loop asynchronously. */
 public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
 
-    // Use a weak reference so the activity can be garbage collected.
+    /**
+     * Reference to the curent activity.
+     *
+     * <p>We use a weak reference so the activity can be garbage collected.
+     */
     private WeakReference<Activity> activityReference;
+
+    /** Should we catch Python exceptions? */
     private boolean catchExceptions = false;
 
-    public PythonTask(Activity activity) {
-        activityReference = new WeakReference<Activity>(activity);
-    }
-
+    /**
+     * PythonTask constructor.
+     *
+     * @param activity Current activity
+     * @param newCatchExceptions Should we catch Python exceptions?
+     */
     public PythonTask(Activity activity, boolean newCatchExceptions) {
-        this(activity);
+        activityReference = new WeakReference<Activity>(activity);
         catchExceptions = newCatchExceptions;
     }
 
+    /**
+     * Run tasks asynchronously.
+     *
+     * @param tasks Python coroutines to execute
+     * @return Did the tasks finish correctly?
+     */
     protected Boolean doInBackground(PyObject... tasks) {
         Python py = Python.getInstance();
         PyObject asyncio = py.getModule("asyncio");
@@ -46,6 +61,8 @@ public class PythonTask extends AsyncTask<PyObject, Integer, Boolean> {
                 } else {
                     throw error;
                 }
+
+                return false;
             }
         }
         loop.callAttr("close");

@@ -13,11 +13,21 @@ import pro.rudloff.hangupsdroid.R;
 import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
 
+/** Activity that lists messages in a specific conversation. */
 public class ConversationActivity extends Activity implements OnLoadMoreListener {
 
+    /** ChatKit adapter used to inject the messages in the view. */
     private MessagesListAdapter<Message> messageAdapter;
+
+    /** Current conversation. */
     private Conversation conversation;
 
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved state of the activity if it has been previously killed by the
+     *     OS.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation);
@@ -43,6 +53,11 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
+    /**
+     * Called by our Python module when new messages are available.
+     *
+     * @param messageList Python list of hangups ConversationEvent objects.
+     */
     public void onNewMessages(PyObject messageList) {
         App app = (App) getApplicationContext();
 
@@ -51,6 +66,12 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         app.pythonApp.callAttr("set_read", conversation.getId());
     }
 
+    /**
+     * Called when the user scrolls to the top of the view.
+     *
+     * @param page Next page to load
+     * @param totalItemsCount Current messages counter
+     */
     public void onLoadMore(int page, int totalItemsCount) {
         App app = (App) getApplicationContext();
 
@@ -58,6 +79,11 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
 
+    /**
+     * Called by our Python module when a new hangups ChatMessageEvent is received.
+     *
+     * @param event hangups ConversationEvent object
+     */
     public void onChatMessageEvent(PyObject event) {
         App app = (App) getApplicationContext();
 

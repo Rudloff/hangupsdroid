@@ -19,8 +19,15 @@ import pro.rudloff.hangupsdroid.RefreshTokenCache;
 import pro.rudloff.hangupsdroid.runnables.ProgressDialogRunnable;
 import pro.rudloff.hangupsdroid.tasks.PythonTask;
 
+/** Activity that displays the login screen. */
 public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener {
 
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved state of the activity if it has been previously killed by the
+     *     OS.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
@@ -40,6 +47,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         }
     }
 
+    /** Login to Hangouts. */
     public void login() {
         App app = (App) getApplicationContext();
 
@@ -58,10 +66,23 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
                                 new RefreshTokenCache(this)));
     }
 
+    /**
+     * Called when the user clicks on the login button.
+     *
+     * @param view [description]
+     */
     public void onClick(View view) {
         login();
     }
 
+    /**
+     * Called when the user performs an action with the virtual keyboard.
+     *
+     * @param view Current view
+     * @param actionId ID of the action performed
+     * @param event Event corresponding to the entered key
+     * @return Did we consume the action?
+     */
     public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             login();
@@ -71,15 +92,21 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         return false;
     }
 
+    /** Called by our Python module when hangups successfully connected to Hangouts. */
     public void onConnected() {
         Intent intent = new Intent(this, ConversationListActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Called by our Python module when hangups successfully retrieved login cookies.
+     *
+     * @param cookies Hangouts cookies
+     */
     public void onAuth(PyObject cookies) {
         App app = (App) getApplicationContext();
 
         runOnUiThread(new ProgressDialogRunnable(this, getString(R.string.connect_dialog)));
-        new PythonTask(this).execute(app.pythonApp.callAttr("connect", this, cookies));
+        new PythonTask(this, false).execute(app.pythonApp.callAttr("connect", this, cookies));
     }
 }

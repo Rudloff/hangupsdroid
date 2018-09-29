@@ -7,18 +7,35 @@ import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import java.util.ArrayList;
 
+/** Class used to manage conversations. */
 public class Conversation implements IDialog {
 
+    /** hangups Conversation object. */
     private PyObject conversation;
 
+    /**
+     * Conversation constructor.
+     *
+     * @param newConversation hangups Conversation object
+     */
     public Conversation(PyObject newConversation) {
         conversation = newConversation;
     }
 
+    /**
+     * Get the conversation ID.
+     *
+     * @return ID
+     */
     public String getId() {
         return conversation.get("id_").toString();
     }
 
+    /**
+     * Get the User object corresponding to the user currently using the app.
+     *
+     * @return Current user
+     */
     public User getSelfUser() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -26,6 +43,11 @@ public class Conversation implements IDialog {
         return new User(hangupsdroid.callAttr("get_self_user", conversation.get("users")));
     }
 
+    /**
+     * Get the conversation thumbnail.
+     *
+     * @return Thumbnail URL
+     */
     public String getDialogPhoto() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();
@@ -44,6 +66,11 @@ public class Conversation implements IDialog {
         return "android.resource://android/drawable/ic_menu_allfriends";
     }
 
+    /**
+     * Get the conversation title.
+     *
+     * @return Conversation title
+     */
     public String getDialogName() {
         Python py = Python.getInstance();
         PyObject utils = py.getModule("hangups.ui.utils");
@@ -51,6 +78,11 @@ public class Conversation implements IDialog {
         return utils.callAttr("get_conv_name", conversation).toString();
     }
 
+    /**
+     * Get a list of users in this conversation.
+     *
+     * @return List of users
+     */
     public ArrayList<User> getUsers() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();
@@ -77,6 +109,11 @@ public class Conversation implements IDialog {
         return users;
     }
 
+    /**
+     * Get the last (newest) message loaded in this conversation.
+     *
+     * @return Last message
+     */
     public IMessage getLastMessage() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -90,6 +127,11 @@ public class Conversation implements IDialog {
         return null;
     }
 
+    /**
+     * Get the first (oldest) message loaded in this conversation.
+     *
+     * @return First message
+     */
     public IMessage getFirstMessage() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -103,10 +145,22 @@ public class Conversation implements IDialog {
         return null;
     }
 
+    /**
+     * Set a new last message manually.
+     *
+     * <p>This actually does nothing because we use hangups to handle this.
+     *
+     * @param message Message
+     */
     public void setLastMessage(IMessage message) {
-        // We the hangups conversation object to manage the last message.
+        // We use the hangups conversation object to manage the last message.
     }
 
+    /**
+     * Get the number of unread messages in the conversation.
+     *
+     * @return Number of unread messages
+     */
     public int getUnreadCount() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -114,6 +168,12 @@ public class Conversation implements IDialog {
         return hangupsdroid.callAttr("get_num_unread", conversation).toJava(int.class);
     }
 
+    /**
+     * Get a list of all messages in the conversation.
+     *
+     * @param activity Current activity
+     * @return List of all messages
+     */
     public ArrayList<Message> getMessages(Activity activity) {
         App app = (App) activity.getApplicationContext();
 

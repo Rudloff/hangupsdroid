@@ -6,17 +6,28 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import java.util.ArrayList;
 import pro.rudloff.hangupsdroid.Conversation;
 
+/** Runnable used to add new conversations to the view. */
 public class AddConversationRunnable implements Runnable {
 
+    /** ChatKit adapter used to inject the conversations in the view. */
     private DialogsListAdapter<Conversation> conversationAdapter;
+
+    /** Python list of hangups Conversation objects. */
     private PyObject conversationList;
 
+    /**
+     * AddConversationRunnable constructor.
+     *
+     * @param newConversationAdapter ChatKit adapter to use
+     * @param newConversationList Python list of hangups Conversation objects to add
+     */
     public AddConversationRunnable(
             DialogsListAdapter<Conversation> newConversationAdapter, PyObject newConversationList) {
         conversationAdapter = newConversationAdapter;
         conversationList = newConversationList;
     }
 
+    /** Called to run the runnable. */
     public void run() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();

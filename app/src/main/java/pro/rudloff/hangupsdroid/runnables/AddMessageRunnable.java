@@ -9,13 +9,28 @@ import pro.rudloff.hangupsdroid.App;
 import pro.rudloff.hangupsdroid.Message;
 import pro.rudloff.hangupsdroid.User;
 
+/** Runnable used to add new messages to the view. */
 public class AddMessageRunnable implements Runnable {
 
+    /** Current activity. */
     private Activity activity;
+
+    /** ChatKit adapter used to inject the messages in the view. */
     private MessagesListAdapter<Message> messageAdapter;
+
+    /** Python list of hangups ConversationEvent objects. */
     private PyObject messageList;
+
+    /** hangups ConversationEvent object. */
     private Message message;
 
+    /**
+     * Constructor when add a list of messages.
+     *
+     * @param newActivity Current activity
+     * @param newMessageAdapter ChatKit adapter to use
+     * @param newMessageList Python list of hangups ConversationEvent objects to add
+     */
     public AddMessageRunnable(
             Activity newActivity,
             MessagesListAdapter<Message> newMessageAdapter,
@@ -25,6 +40,13 @@ public class AddMessageRunnable implements Runnable {
         messageList = newMessageList;
     }
 
+    /**
+     * Consutructor when adding a single message.
+     *
+     * @param newActivity Current activity
+     * @param newMessageAdapter ChatKit adapter to use
+     * @param newMessage hangups ConversationEvent to add
+     */
     public AddMessageRunnable(
             Activity newActivity,
             MessagesListAdapter<Message> newMessageAdapter,
@@ -34,6 +56,7 @@ public class AddMessageRunnable implements Runnable {
         message = newMessage;
     }
 
+    /** Called to run the runnable. */
     public void run() {
         App app = (App) activity.getApplicationContext();
 
