@@ -42,7 +42,7 @@ public class AddMessageRunnable implements Runnable {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         if (message != null) {
-            messageAdapter.addToStart(message, false);
+            messageAdapter.addToStart(message, true);
         } else if (messageList != null) {
             ArrayList<Message> messages = new ArrayList<Message>();
             for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {

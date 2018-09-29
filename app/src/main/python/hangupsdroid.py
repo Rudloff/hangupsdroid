@@ -136,13 +136,28 @@ class App():
 
         activity.onNewMessages(get_chat_messages(conversation_events))
 
+    def add_conversation_observer(self, activity, conversation_id):
+        """Add an event observer for this conversation"""
+        self.get_conversation(conversation_id).on_event.add_observer(
+            lambda event: event_received(activity, event)
+        )
+
     def add_messages(self, activity, conversation_id, last_message_id=None):
+        """Tell the coroutine queue to fetch new messages for this conversation"""
+        self.coroutine_queue.put(
+            self.get_older_messages(
+                activity,
+                self.get_conversation(conversation_id),
+                last_message_id
+            )
+        )
+
+    def set_read(self, conversation_id):
         """Tell the coroutine queue to fetch new messages for this conversation
         Also adds an event observer on the conversation.
         """
         conversation = self.get_conversation(conversation_id)
-        conversation.on_event.add_observer(lambda event: event_received(activity, event))
-        self.coroutine_queue.put(self.get_older_messages(activity, conversation, last_message_id))
+        self.coroutine_queue.put(conversation.update_read_timestamp())
 
     async def get_auth(self, activity, prompt, cache):
         """Get auth cookies and pass them to the activity callback"""

@@ -38,6 +38,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         messagesListView.setAdapter(messageAdapter);
         messageAdapter.setLoadMoreListener(this);
         messageAdapter.addToEnd(conversation.getMessages(this), true);
+        app.pythonApp.callAttr("add_conversation_observer", this, conversation.getId());
         app.pythonApp.callAttr(
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
     }
@@ -47,6 +48,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
 
         runOnUiThread(new AddMessageRunnable(this, messageAdapter, messageList));
         app.progressDialog.dismiss();
+        app.pythonApp.callAttr("set_read", conversation.getId());
     }
 
     public void onLoadMore(int page, int totalItemsCount) {
@@ -68,5 +70,8 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
                                 new User(
                                         app.pythonApp.callAttr(
                                                 "get_user", event.get("user_id"))))));
+        if (hasWindowFocus()) {
+            app.pythonApp.callAttr("set_read", conversation.getId());
+        }
     }
 }
