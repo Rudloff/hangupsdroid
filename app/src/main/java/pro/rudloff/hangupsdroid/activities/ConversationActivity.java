@@ -1,5 +1,6 @@
 package pro.rudloff.hangupsdroid.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -36,6 +37,12 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         getSupportActionBar().setHomeButtonEnabled(true);
 
         App app = (App) getApplicationContext();
+        if (app.pythonApp.get("client") == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
+            return;
+        }
 
         conversation =
                 new Conversation(

@@ -38,6 +38,12 @@ public class ConversationListActivity extends Activity
         setContentView(R.layout.conversation_list);
 
         App app = (App) getApplicationContext();
+        if (app.pythonApp.get("client") == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
+            return;
+        }
 
         DialogsList dialogsListView = findViewById(R.id.conversationList);
         conversationAdapter = new DialogsListAdapter<Conversation>(new AvatarLoader());
