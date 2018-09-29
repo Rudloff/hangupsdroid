@@ -110,7 +110,7 @@ public class ConversationListActivity extends Activity
      * @return Was the menu created?
      */
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.conversation, menu);
+        getMenuInflater().inflate(R.menu.conversation_list, menu);
 
         return true;
     }
