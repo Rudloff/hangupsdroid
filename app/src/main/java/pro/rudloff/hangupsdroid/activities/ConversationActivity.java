@@ -2,6 +2,8 @@ package pro.rudloff.hangupsdroid.activities;
 
 import android.os.Bundle;
 import com.chaquo.python.PyObject;
+import com.stfalcon.chatkit.messages.MessageInput;
+import com.stfalcon.chatkit.messages.MessageInput.InputListener;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import com.stfalcon.chatkit.messages.MessagesListAdapter.OnLoadMoreListener;
@@ -14,7 +16,7 @@ import pro.rudloff.hangupsdroid.User;
 import pro.rudloff.hangupsdroid.runnables.AddMessageRunnable;
 
 /** Activity that lists messages in a specific conversation. */
-public class ConversationActivity extends Activity implements OnLoadMoreListener {
+public class ConversationActivity extends Activity implements OnLoadMoreListener, InputListener {
 
     /** ChatKit adapter used to inject the messages in the view. */
     private MessagesListAdapter<Message> messageAdapter;
@@ -51,6 +53,9 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         app.pythonApp.callAttr("add_conversation_observer", this, conversation.getId());
         app.pythonApp.callAttr(
                 "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
+
+        MessageInput inputView = findViewById(R.id.input);
+        inputView.setInputListener(this);
     }
 
     /**
@@ -99,5 +104,19 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         if (hasWindowFocus()) {
             app.pythonApp.callAttr("set_read", conversation.getId());
         }
+    }
+
+    /**
+     * Called when the user submits a new message.
+     *
+     * @param text Message content
+     * @return Is the message valid?
+     */
+    public boolean onSubmit(CharSequence text) {
+        App app = (App) getApplicationContext();
+
+        app.pythonApp.callAttr("send_message", conversation.getId(), text.toString());
+
+        return true;
     }
 }

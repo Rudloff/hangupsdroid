@@ -153,11 +153,16 @@ class App():
         )
 
     def set_read(self, conversation_id):
-        """Tell the coroutine queue to fetch new messages for this conversation
-        Also adds an event observer on the conversation.
-        """
-        conversation = self.get_conversation(conversation_id)
-        self.coroutine_queue.put(conversation.update_read_timestamp())
+        """Tell the coroutine queue to mark this conversation as read"""
+        self.coroutine_queue.put(self.get_conversation(conversation_id).update_read_timestamp())
+
+    def send_message(self, conversation_id, text):
+        """Tell the coroutine queue to send a new message"""
+        self.coroutine_queue.put(
+            self.get_conversation(conversation_id).send_message(
+                hangups.ChatMessageSegment.from_str(text)
+            )
+        )
 
     async def get_auth(self, activity, prompt, cache):
         """Get auth cookies and pass them to the activity callback"""
