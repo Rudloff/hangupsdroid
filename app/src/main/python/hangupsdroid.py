@@ -123,11 +123,13 @@ class App():
 
     async def get_conversations(self, activity):
         """Fetch all conversations and pass them to the actibity callback"""
-        self.user_list, self.conversation_list = (
-            await hangups.build_user_conversation_list(self.client)
-        )
-
-        self.conversation_list.on_event.add_observer(lambda event: event_received(activity, event))
+        if self.conversation_list is None:
+            self.user_list, self.conversation_list = (
+                await hangups.build_user_conversation_list(self.client)
+            )
+            self.conversation_list.on_event.add_observer(
+                lambda event: event_received(activity, event)
+            )
 
         conversations = self.conversation_list.get_all()
         conversations.reverse()

@@ -62,10 +62,6 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
         messageAdapter.addToEnd(conversation.getMessages(this), true);
         app.pythonApp.callAttr("add_conversation_observer", this, conversation.getId());
 
-        findViewById(R.id.conversationLoader).animate().alpha(1);
-        app.pythonApp.callAttr(
-                "add_messages", this, conversation.getId(), conversation.getFirstMessage().getId());
-
         MessageInput inputView = findViewById(R.id.input);
         inputView.setInputListener(this);
     }
