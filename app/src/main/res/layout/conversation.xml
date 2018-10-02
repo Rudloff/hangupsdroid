@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-  <com.stfalcon.chatkit.messages.MessagesList android:id="@+id/messagesList" android:layout_width="match_parent" android:layout_height="match_parent" app:textAutoLink="all" android:layout_above="@+id/input"/>
+  <com.stfalcon.chatkit.messages.MessagesList android:id="@+id/messagesList" android:layout_width="match_parent" android:layout_height="match_parent" app:textAutoLink="all" android:layout_above="@+id/input" android:layerType="software"/>
   <me.zhanghai.android.materialprogressbar.MaterialProgressBar android:id="@+id/conversationLoader" style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="3dp" android:indeterminate="true" app:mpb_progressStyle="horizontal" app:mpb_useIntrinsicPadding="false" android:layout_gravity="top" android:alpha="0"/>
   <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_above="@+id/input" android:layout_marginLeft="16dp" android:layout_marginRight="16dp" android:background="@android:color/darker_gray"/>
   <com.stfalcon.chatkit.messages.MessageInput android:id="@+id/input" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true"/>
