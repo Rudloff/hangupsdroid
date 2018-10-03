@@ -7,12 +7,12 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.chaquo.python:gradle:4.0.0'
-        classpath 'com.vanniktech:gradle-android-javadoc-plugin:0.3.0'
     }
 }
 
 plugins {
     id 'com.github.sherter.google-java-format' version '0.7.1'
+    id "com.vanniktech.android.javadoc" version "0.3.0"
 }
 
 allprojects {
@@ -25,5 +25,3 @@ allprojects {
 googleJavaFormat {
     options style: 'AOSP'
 }
-
-apply plugin: "com.vanniktech.android.javadoc"
