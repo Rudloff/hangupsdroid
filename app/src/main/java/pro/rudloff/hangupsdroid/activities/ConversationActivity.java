@@ -2,6 +2,7 @@ package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import com.chaquo.python.PyObject;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessageInput.InputListener;
@@ -125,8 +126,12 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
     public boolean onSubmit(CharSequence text) {
         App app = (App) getApplicationContext();
 
-        app.pythonApp.callAttr("send_message", conversation.getId(), text.toString());
+        if (TextUtils.isGraphic(text)) {
+            app.pythonApp.callAttr("send_message", conversation.getId(), text.toString());
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 }
