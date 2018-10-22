@@ -15,7 +15,7 @@ android {
             version '3.6.5'
 
             pip {
-                install "hangups==0.4.5"
+                install "hangups==0.4.6"
                 install "janus==0.4.0"
             }
         }
