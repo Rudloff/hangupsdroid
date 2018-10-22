@@ -1,13 +1,24 @@
 package pro.rudloff.hangupsdroid;
 
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.text.InputType;
 import android.widget.EditText;
+import pro.rudloff.hangupsdroid.runnables.ShowDialogRunnable;
 
 /** Class used by hangups to get credentials entered by the user. */
-public class CredentialsPrompt {
+public class CredentialsPrompt implements OnClickListener {
 
     /** Current activity. */
     private Activity activity;
+
+    /** Verification code. */
+    private String verificationCode;
+
+    /** Text input containing the verification code. */
+    private EditText verificationCodeInput;
 
     /**
      * CredentialsPrompt constructor.
@@ -38,5 +49,37 @@ public class CredentialsPrompt {
         EditText passwordText = activity.findViewById(R.id.input_password);
 
         return passwordText.getText().toString();
+    }
+
+    /**
+     * Ask the user for a verification code.
+     *
+     * @return Verification code
+     */
+    public String get_verification_code() {
+        Builder builder = new Builder(activity);
+        verificationCodeInput = new EditText(activity);
+        verificationCodeInput.setInputType(
+                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(verificationCodeInput)
+                .setCancelable(false)
+                .setTitle("Verification code")
+                .setPositiveButton(android.R.string.yes, this);
+
+        activity.runOnUiThread(new ShowDialogRunnable(builder));
+
+        while (verificationCode == null) {}
+
+        return verificationCode;
+    }
+
+    /**
+     * Called when the verification code dialog is submitted.
+     *
+     * @param dialog Verification code dialog
+     * @param which Button that was clicked
+     */
+    public void onClick(DialogInterface dialog, int which) {
+        verificationCode = verificationCodeInput.getText().toString();
     }
 }

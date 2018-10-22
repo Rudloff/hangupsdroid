@@ -13,4 +13,7 @@ addons:
     sources:
       - sourceline: ppa:jonathonf/python-3.6
 
-before_install: echo 'android { defaultConfig { python { buildPython "python3.6" } } }' >> app/build.gradle
+before_install:
+  - echo 'android { defaultConfig { python { buildPython "python3.6" } } }'
+        >> app/build.gradle
+  - touch local.properties
