@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="auth_dialog">Identification</string>
+  <string name="connect_dialog">Connexion</string>
+  <string name="conversation_list_dialog">Récupération des conversations</string>
+  <string name="email_field">Adresse e-mail</string>
+  <string name="password_field">Mot de passe</string>
+  <string name="login_btn">Connexion</string>
+  <string name="yesterday">Hier</string>
+  <string name="action_logout">Déconnexion</string>
+</resources>
