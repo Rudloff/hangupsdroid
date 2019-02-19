@@ -1,7 +1,6 @@
 package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.chaquo.python.PyObject;
@@ -27,14 +26,9 @@ public class ConversationListActivity extends Activity
     /** ChatKit adapter used to inject the conversations in the view. */
     private DialogsListAdapter<Conversation> conversationAdapter;
 
-    /**
-     * Called when the activity is created.
-     *
-     * @param savedInstanceState Saved state of the activity if it has been previously killed by the
-     *     OS.
-     */
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    /** Called when the activity is created. */
+    protected void onStart() {
+        super.onStart();
         setContentView(R.layout.conversation_list);
 
         App app = (App) getApplicationContext();
@@ -136,9 +130,7 @@ public class ConversationListActivity extends Activity
             return true;
         } else if (item.getItemId() == R.id.action_refresh) {
             // We force restart the current activity.
-            Intent intent = new Intent(this, ConversationListActivity.class);
-            finishAffinity();
-            startActivity(intent);
+            onStart();
 
             return true;
         }
