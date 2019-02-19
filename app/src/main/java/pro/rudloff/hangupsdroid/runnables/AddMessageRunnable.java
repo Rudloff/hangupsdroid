@@ -59,6 +59,7 @@ public class AddMessageRunnable implements Runnable {
     }
 
     /** Called to run the runnable. */
+    @Override
     public void run() {
         App app = (App) activity.getApplicationContext();
 

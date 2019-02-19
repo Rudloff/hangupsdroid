@@ -24,6 +24,7 @@ public class ToastRunnable implements Runnable {
     }
 
     /** Called to run the runnable. */
+    @Override
     public void run() {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
     }

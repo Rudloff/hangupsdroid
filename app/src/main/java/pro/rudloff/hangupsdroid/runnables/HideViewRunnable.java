@@ -18,6 +18,7 @@ public class HideViewRunnable implements Runnable {
     }
 
     /** Called to run the runnable. */
+    @Override
     public void run() {
         view.animate().alpha(0);
     }

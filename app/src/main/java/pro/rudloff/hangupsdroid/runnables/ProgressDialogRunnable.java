@@ -25,6 +25,7 @@ public class ProgressDialogRunnable implements Runnable {
     }
 
     /** Called to run the runnable. */
+    @Override
     public void run() {
         App app = (App) activity.getApplicationContext();
         if (app.progressDialog != null) {

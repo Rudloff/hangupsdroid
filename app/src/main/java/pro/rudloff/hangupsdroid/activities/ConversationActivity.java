@@ -33,6 +33,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
      * @param savedInstanceState Saved state of the activity if it has been previously killed by the
      *     OS.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation);
@@ -86,6 +87,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
      * @param page Next page to load
      * @param totalItemsCount Current messages counter
      */
+    @Override
     public void onLoadMore(int page, int totalItemsCount) {
         App app = (App) getApplicationContext();
 
@@ -123,6 +125,7 @@ public class ConversationActivity extends Activity implements OnLoadMoreListener
      * @param text Message content
      * @return Is the message valid?
      */
+    @Override
     public boolean onSubmit(CharSequence text) {
         App app = (App) getApplicationContext();
 

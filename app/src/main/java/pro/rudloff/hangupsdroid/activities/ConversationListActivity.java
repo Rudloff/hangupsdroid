@@ -27,6 +27,7 @@ public class ConversationListActivity extends Activity
     private DialogsListAdapter<Conversation> conversationAdapter;
 
     /** Called when the activity is created. */
+    @Override
     protected void onStart() {
         super.onStart();
         setContentView(R.layout.conversation_list);
@@ -58,6 +59,7 @@ public class ConversationListActivity extends Activity
      *
      * @param conversation Conversation clicked
      */
+    @Override
     public void onDialogClick(Conversation conversation) {
         Intent intent = new Intent(this, ConversationActivity.class);
         intent.putExtra("conversationId", conversation.getId());
@@ -103,6 +105,7 @@ public class ConversationListActivity extends Activity
      * @param menu Menu
      * @return Was the menu created?
      */
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.conversation_list, menu);
 
@@ -115,6 +118,7 @@ public class ConversationListActivity extends Activity
      * @param item Menu item that was selected.
      * @return Was the action consumed?
      */
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         App app = (App) getApplicationContext();
         RefreshTokenCache cache = new RefreshTokenCache(this);

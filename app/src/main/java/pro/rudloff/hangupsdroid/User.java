@@ -23,6 +23,7 @@ public class User implements IUser {
      *
      * @return ID
      */
+    @Override
     public String getId() {
         return user.get("id_").toString();
     }
@@ -32,6 +33,7 @@ public class User implements IUser {
      *
      * @return Full name
      */
+    @Override
     public String getName() {
         return user.get("full_name").toString();
     }
@@ -41,6 +43,7 @@ public class User implements IUser {
      *
      * @return Avatar URL
      */
+    @Override
     public String getAvatar() {
         PyObject photoUrl = user.get("photo_url");
         if (photoUrl != null) {
