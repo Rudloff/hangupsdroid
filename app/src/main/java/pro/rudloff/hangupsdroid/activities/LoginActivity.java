@@ -28,6 +28,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
      * @param savedInstanceState Saved state of the activity if it has been previously killed by the
      *     OS.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
@@ -71,6 +72,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
      *
      * @param view [description]
      */
+    @Override
     public void onClick(View view) {
         login();
     }
@@ -83,6 +85,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
      * @param event Event corresponding to the entered key
      * @return Did we consume the action?
      */
+    @Override
     public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             login();

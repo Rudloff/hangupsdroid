@@ -33,6 +33,7 @@ public class UpdateConversationRunnable implements Runnable {
     }
 
     /** Called to run the runnable. */
+    @Override
     public void run() {
         if (!conversationAdapter.updateDialogWithMessage(conversation.getId(), message)) {
             conversationAdapter.addItem(conversation);

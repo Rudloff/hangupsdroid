@@ -27,6 +27,7 @@ public class Conversation implements IDialog {
      *
      * @return ID
      */
+    @Override
     public String getId() {
         return conversation.get("id_").toString();
     }
@@ -48,6 +49,7 @@ public class Conversation implements IDialog {
      *
      * @return Thumbnail URL
      */
+    @Override
     public String getDialogPhoto() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();
@@ -71,6 +73,7 @@ public class Conversation implements IDialog {
      *
      * @return Conversation title
      */
+    @Override
     public String getDialogName() {
         Python py = Python.getInstance();
         PyObject utils = py.getModule("hangups.ui.utils");
@@ -83,6 +86,7 @@ public class Conversation implements IDialog {
      *
      * @return List of users
      */
+    @Override
     public ArrayList<User> getUsers() {
         Python py = Python.getInstance();
         PyObject builtins = py.getBuiltins();
@@ -114,6 +118,7 @@ public class Conversation implements IDialog {
      *
      * @return Last message
      */
+    @Override
     public IMessage getLastMessage() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -152,6 +157,7 @@ public class Conversation implements IDialog {
      *
      * @param message Message
      */
+    @Override
     public void setLastMessage(IMessage message) {
         // We use the hangups conversation object to manage the last message.
     }
@@ -161,6 +167,7 @@ public class Conversation implements IDialog {
      *
      * @return Number of unread messages
      */
+    @Override
     public int getUnreadCount() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");

@@ -7,6 +7,7 @@ import pro.rudloff.hangupsdroid.App;
 abstract class Activity extends AppCompatActivity {
 
     /** Called when the activity is destroyed. */
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 

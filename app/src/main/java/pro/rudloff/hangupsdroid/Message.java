@@ -37,6 +37,7 @@ public class Message implements IMessage, Image {
      *
      * @return ID
      */
+    @Override
     public String getId() {
         return message.get("id_").toString();
     }
@@ -46,6 +47,7 @@ public class Message implements IMessage, Image {
      *
      * @return Content
      */
+    @Override
     public String getText() {
         return message.get("text").toString();
     }
@@ -55,6 +57,7 @@ public class Message implements IMessage, Image {
      *
      * @return Image URL
      */
+    @Override
     public String getImageUrl() {
         Python py = Python.getInstance();
         PyObject hangupsdroid = py.getModule("hangupsdroid");
@@ -72,6 +75,7 @@ public class Message implements IMessage, Image {
      *
      * @return User
      */
+    @Override
     public User getUser() {
         return user;
     }
@@ -81,6 +85,7 @@ public class Message implements IMessage, Image {
      *
      * @return Creation date
      */
+    @Override
     public Date getCreatedAt() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));

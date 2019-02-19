@@ -1,7 +1,6 @@
 package pro.rudloff.hangupsdroid.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.chaquo.python.PyObject;
@@ -27,14 +26,10 @@ public class ConversationListActivity extends Activity
     /** ChatKit adapter used to inject the conversations in the view. */
     private DialogsListAdapter<Conversation> conversationAdapter;
 
-    /**
-     * Called when the activity is created.
-     *
-     * @param savedInstanceState Saved state of the activity if it has been previously killed by the
-     *     OS.
-     */
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    /** Called when the activity is created. */
+    @Override
+    protected void onStart() {
+        super.onStart();
         setContentView(R.layout.conversation_list);
 
         App app = (App) getApplicationContext();
@@ -64,6 +59,7 @@ public class ConversationListActivity extends Activity
      *
      * @param conversation Conversation clicked
      */
+    @Override
     public void onDialogClick(Conversation conversation) {
         Intent intent = new Intent(this, ConversationActivity.class);
         intent.putExtra("conversationId", conversation.getId());
@@ -109,6 +105,7 @@ public class ConversationListActivity extends Activity
      * @param menu Menu
      * @return Was the menu created?
      */
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.conversation_list, menu);
 
@@ -121,6 +118,7 @@ public class ConversationListActivity extends Activity
      * @param item Menu item that was selected.
      * @return Was the action consumed?
      */
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         App app = (App) getApplicationContext();
         RefreshTokenCache cache = new RefreshTokenCache(this);
@@ -133,6 +131,14 @@ public class ConversationListActivity extends Activity
             Intent intent = new Intent(this, LoginActivity.class);
             finishAffinity();
             startActivity(intent);
+            return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            // We force refresh the conversation list.
+            runOnUiThread(
+                    new ProgressDialogRunnable(this, getString(R.string.conversation_list_dialog)));
+
+            app.pythonApp.callAttr("add_conversations", this, true);
+
             return true;
         }
 

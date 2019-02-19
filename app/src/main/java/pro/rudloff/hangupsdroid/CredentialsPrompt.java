@@ -79,6 +79,7 @@ public class CredentialsPrompt implements OnClickListener {
      * @param dialog Verification code dialog
      * @param which Button that was clicked
      */
+    @Override
     public void onClick(DialogInterface dialog, int which) {
         verificationCode = verificationCodeInput.getText().toString();
     }

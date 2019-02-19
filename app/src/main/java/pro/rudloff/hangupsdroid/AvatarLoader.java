@@ -13,6 +13,7 @@ public class AvatarLoader implements ImageLoader {
      * @param imageView View to load the image into.
      * @param url URL of the image
      */
+    @Override
     public void loadImage(ImageView imageView, String url) {
         Picasso.get().load(url).into(imageView);
     }

@@ -26,6 +26,7 @@ public class MessageDateFormatter implements Formatter {
      * @param date Date to format
      * @return Formatted date
      */
+    @Override
     public String format(Date date) {
         if (DateFormatter.isToday(date)) {
             return DateFormatter.format(date, DateFormatter.Template.TIME);
