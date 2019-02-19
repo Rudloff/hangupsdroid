@@ -9,4 +9,5 @@
   <string name="yesterday">Hier</string>
   <string name="action_logout">Déconnexion</string>
   <string name="action_refresh">Forcer le rafraichissement</string>
+  <string name="acra_dialog_text">Désolé, l\'application a planté. Acceptez-vous d\'envoyer un rapport d\'erreur aux développeurs ?</string>
 </resources>
