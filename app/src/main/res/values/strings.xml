@@ -9,5 +9,5 @@
   <string name="yesterday">Yesterday</string>
   <string name="action_refresh">Force refresh</string>
   <string name="action_logout">Logout</string>
-  <string name="acra_dialog_text">Sorry, the application crashed. Do you agree to send a report to the developers?</string>
+  <string name="acra_dialog_text">Sorry, HangupsDroid crashed. Do you agree to send a report to the developers?</string>
 </resources>
