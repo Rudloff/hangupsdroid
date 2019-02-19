@@ -134,6 +134,13 @@ public class ConversationListActivity extends Activity
             finishAffinity();
             startActivity(intent);
             return true;
+        } else if (item.getItemId() == R.id.action_refresh) {
+            // We force restart the current activity.
+            Intent intent = new Intent(this, ConversationListActivity.class);
+            finishAffinity();
+            startActivity(intent);
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

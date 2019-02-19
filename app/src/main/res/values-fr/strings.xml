@@ -8,4 +8,5 @@
   <string name="login_btn">Connexion</string>
   <string name="yesterday">Hier</string>
   <string name="action_logout">Déconnexion</string>
+  <string name="action_refresh">Forcer le rafraichissement</string>
 </resources>
