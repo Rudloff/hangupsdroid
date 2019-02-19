@@ -129,8 +129,11 @@ public class ConversationListActivity extends Activity
             startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.action_refresh) {
-            // We force restart the current activity.
-            onStart();
+            // We force refresh the conversation list.
+            runOnUiThread(
+                    new ProgressDialogRunnable(this, getString(R.string.conversation_list_dialog)));
+
+            app.pythonApp.callAttr("add_conversations", this, true);
 
             return true;
         }

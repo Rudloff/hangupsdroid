@@ -121,9 +121,9 @@ class App():
         """Return the conversation with the specified ID"""
         return self.conversation_list.get(conversation_id)
 
-    async def get_conversations(self, activity):
+    async def get_conversations(self, activity, force=False):
         """Fetch all conversations and pass them to the actibity callback"""
-        if self.conversation_list is None:
+        if self.conversation_list is None or force:
             self.user_list, self.conversation_list = (
                 await hangups.build_user_conversation_list(self.client)
             )
@@ -135,9 +135,9 @@ class App():
         conversations.reverse()
         activity.onNewConversations(conversations)
 
-    def add_conversations(self, activity):
+    def add_conversations(self, activity, force=False):
         """Tell the coroutine queue to fetch conversations"""
-        self.coroutine_queue.put(self.get_conversations(activity))
+        self.coroutine_queue.put(self.get_conversations(activity, force))
 
     async def get_older_messages(self, activity, conversation, last_message_id=None):
         """Fetch older messages in this conversation and call the activity callback"""
