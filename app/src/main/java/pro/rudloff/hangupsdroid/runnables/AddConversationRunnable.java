@@ -35,9 +35,8 @@ public class AddConversationRunnable implements Runnable {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         ArrayList<Conversation> conversations = new ArrayList<Conversation>();
-        for (int i = 0; i < builtins.callAttr("len", conversationList).toJava(int.class); i++) {
-            conversations.add(
-                    new Conversation(hangupsdroid.callAttr("get_from_array", conversationList, i)));
+        for (PyObject pyConversation : conversationList.asList()) {
+            conversations.add(new Conversation(pyConversation));
         }
 
         conversationAdapter.setItems(conversations);

@@ -56,8 +56,7 @@ public class Conversation implements IDialog {
         PyObject hangupsdroid = py.getModule("hangupsdroid");
 
         PyObject conversationUsers = conversation.get("users");
-        int nbUsers = builtins.callAttr("len", conversationUsers).toJava(int.class);
-        if (nbUsers <= 2) {
+        if (conversationUsers.asList().size() <= 2) {
             PyObject otherUser = hangupsdroid.callAttr("get_other_user", conversationUsers);
             if (otherUser != null) {
                 User user = new User(otherUser);
@@ -95,18 +94,15 @@ public class Conversation implements IDialog {
         ArrayList<User> users = new ArrayList<User>();
         PyObject conversationUsers = conversation.get("users");
 
-        int nbUsers = builtins.callAttr("len", conversationUsers).toJava(int.class);
-        if (nbUsers <= 2) {
+        if (conversationUsers.asList().size() <= 2) {
             // If this is not a group conversation, we only display the other user.
             PyObject otherUser = hangupsdroid.callAttr("get_other_user", conversationUsers);
             if (otherUser != null) {
                 users.add(new User(otherUser));
             }
         } else {
-            for (int i = 0;
-                    i < builtins.callAttr("len", conversationUsers).toJava(int.class);
-                    i++) {
-                users.add(new User(hangupsdroid.callAttr("get_from_array", conversationUsers, i)));
+            for (PyObject pyUser : conversationUsers.asList()) {
+                users.add(new User(pyUser));
             }
         }
 
@@ -191,12 +187,12 @@ public class Conversation implements IDialog {
         ArrayList<Message> messages = new ArrayList<Message>();
         PyObject messageList =
                 hangupsdroid.callAttr("get_chat_messages", conversation.get("events"));
-        for (int i = 0; i < builtins.callAttr("len", messageList).toJava(int.class); i++) {
-            PyObject message = hangupsdroid.callAttr("get_from_array", messageList, i);
+        for (PyObject pyMessage : messageList.asList()) {
             messages.add(
                     new Message(
-                            message,
-                            new User(app.pythonApp.callAttr("get_user", message.get("user_id")))));
+                            pyMessage,
+                            new User(
+                                    app.pythonApp.callAttr("get_user", pyMessage.get("user_id")))));
         }
         return messages;
     }
