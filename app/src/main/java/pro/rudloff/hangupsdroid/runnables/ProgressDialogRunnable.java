@@ -31,6 +31,8 @@ public class ProgressDialogRunnable implements Runnable {
         if (app.progressDialog != null) {
             app.progressDialog.dismiss();
         }
-        app.progressDialog = ProgressDialog.show(activity, null, message + "…", true, false);
+        if (!activity.isFinishing()) {
+            app.progressDialog = ProgressDialog.show(activity, null, message + "…", true, false);
+        }
     }
 }
