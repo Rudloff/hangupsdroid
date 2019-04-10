@@ -123,17 +123,22 @@ class App():
 
     async def get_conversations(self, activity, force=False):
         """Fetch all conversations and pass them to the actibity callback"""
-        if self.conversation_list is None or force:
-            self.user_list, self.conversation_list = (
-                await hangups.build_user_conversation_list(self.client)
-            )
-            self.conversation_list.on_event.add_observer(
-                lambda event: event_received(activity, event)
-            )
+        try:
+            if self.conversation_list is None or force:
+                self.user_list, self.conversation_list = (
+                    await hangups.build_user_conversation_list(self.client)
+                )
+                self.conversation_list.on_event.add_observer(
+                    lambda event: event_received(activity, event)
+                )
 
-        conversations = self.conversation_list.get_all()
-        conversations.reverse()
-        activity.onNewConversations(conversations)
+            conversations = self.conversation_list.get_all()
+            conversations.reverse()
+            activity.onNewConversations(conversations)
+        except hangups.NetworkError as error:
+            activity.onPythonError(error, False)
+        except RuntimeError as error:
+            activity.onPythonError(error, True)
 
     def add_conversations(self, activity, force=False):
         """Tell the coroutine queue to fetch conversations"""
@@ -141,9 +146,12 @@ class App():
 
     async def get_older_messages(self, activity, conversation, last_message_id=None):
         """Fetch older messages in this conversation and call the activity callback"""
-        conversation_events = await conversation.get_events(last_message_id)
+        try:
+            conversation_events = await conversation.get_events(last_message_id)
 
-        activity.onNewMessages(get_chat_messages(conversation_events))
+            activity.onNewMessages(get_chat_messages(conversation_events))
+        except hangups.NetworkError as error:
+            activity.onPythonError(error, False)
 
     def add_conversation_observer(self, activity, conversation_id):
         """Add an event observer for this conversation"""
@@ -209,5 +217,8 @@ class App():
         self.coroutine_queue = CoroutineQueue()
 
         self.client.on_connect.add_observer(lambda: connected(activity))
-        coros = [self.client.connect(), self.coroutine_queue.consume()]
-        await asyncio.gather(*coros)
+        try:
+            coros = [self.client.connect(), self.coroutine_queue.consume()]
+            await asyncio.gather(*coros)
+        except (hangups.NetworkError) as error:
+            activity.onPythonError(error, True)
