@@ -35,6 +35,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
 
         App app = (App) getApplicationContext();
         Button loginButton = findViewById(R.id.btn_login);
+        EditText emailText = findViewById(R.id.input_email);
         EditText passwordText = findViewById(R.id.input_password);
         RefreshTokenCache cache = new RefreshTokenCache(this);
 
@@ -42,8 +43,12 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         passwordText.setOnEditorActionListener(this);
 
         if (app.pythonApp.get("client") != null) {
+            // Client is already connected.
             onConnected();
         } else if (cache.get() != null) {
+            // Autologin with the cached token.
+            emailText.setEnabled(false);
+            passwordText.setEnabled(false);
             login();
         }
     }
