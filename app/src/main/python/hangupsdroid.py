@@ -152,6 +152,8 @@ class App():
             activity.onNewMessages(get_chat_messages(conversation_events))
         except hangups.NetworkError as error:
             activity.onPythonError(error, False)
+        except RuntimeError as error:
+            activity.onPythonError(error, True)
 
     def add_conversation_observer(self, activity, conversation_id):
         """Add an event observer for this conversation"""
