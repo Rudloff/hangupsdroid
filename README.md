@@ -1,5 +1,7 @@
 # HangupsDroid
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 HangupsDroid is a port of [hangups](https://hangups.readthedocs.io/en/latest/) to Android.
 
 It allows you to use Hangouts on an Android phone without Play Services.
